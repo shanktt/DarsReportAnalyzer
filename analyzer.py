@@ -41,10 +41,14 @@ def is_valid(s):
 def is_class(s):
     return not re.match('([0-9])', s) # lines is comprised of classes and their corresponding grades. Grades will start with a number while classes start with a character (indicating semester when class was taken)
 
+def passed_class(x):
+    #Need more info on how classes displayed in dars report for this
+    assert(True)
+
 unformatted_text = pdf_to_text('dara2.pdf') 
 lines = format_text_in_array(unformatted_text)
 classes = [s for s in lines if is_class(s)]
 grades = [s for s in lines if not is_class(s)]
-print (classes)
-print(grades)
 
+merged = [(classes[i], grades[i]) for i in range(0, len(classes))]
+print(merged)
