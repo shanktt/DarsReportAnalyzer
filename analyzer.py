@@ -26,10 +26,23 @@ def format_text_in_array(unformatted_text):
     classes_unformatted = classes_unformatted.replace("SUMMARY OF COURSES TAKEN -", "")
     classes_unformatted = classes_unformatted.replace(">I", "")
     classes_unformatted = classes_unformatted.replace("My Audit - Audit Results Tab", "")
-    classes_unformatted = classes_unformatted.replace("https://uachieve.apps.uillinois.edu/uachieve_uiuc/audit/read.html?printerFriendly=true&id=JobQueueRun!!!!ISEhIWludFNlcU5vPTMxMjczNDI=", "")
+    # classes_unformatted = classes_unformatted.replace("https://uachieve.apps.uillinois.edu/uachieve_uiuc/audit/read.html?printerFriendly=true&id=JobQueueRun!!!!ISEhIWludFNlcU5vPTMxMjczNDI=", "")
     lines = classes_unformatted.splitlines()
     lines = [line for line in lines if is_valid(line)]
-    lines.remove('\uf00c')
+    if '\uf00c' in lines:
+        lines.remove('\uf00c')
+    
+    for s in lines:
+        if '.edu' in s:
+            lines.remove(s)
+
+    # target_index = lines.index()
+    try:
+        target_index = lines.index('CREDIT NOT COUNTING TOWARDS GRADUATION')
+        lines = lines[:target_index]
+    except ValueError:
+        pass
+
     return lines
 
 def is_valid(s):
@@ -48,9 +61,9 @@ def passed_class(x):
     for pg in passing_grades:
         if pg in grade:
             return True
-
     return False
 
+# unformatted_text = pdf_to_text('dara2.pdf') 
 unformatted_text = pdf_to_text('dara2.pdf') 
 lines = format_text_in_array(unformatted_text)
 classes = [s for s in lines if is_class(s)]
@@ -58,3 +71,4 @@ grades = [s for s in lines if not is_class(s)]
 
 merged = [(classes[i], grades[i]) for i in range(0, len(classes))]
 passed_classes = [class_and_grade for class_and_grade in merged if passed_class(class_and_grade)]
+print(passed_classes)
