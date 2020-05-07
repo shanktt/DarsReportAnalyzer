@@ -5,6 +5,7 @@ from pdfminer.pdfpage import PDFPage
 from io import BytesIO
 import re
 from dataclasses import dataclass
+from minor import minor
 
 def pdf_to_text(path):
     manager = PDFResourceManager()
@@ -64,6 +65,21 @@ def passed_class(x):
             return True
     return False
 
+def construct_raw_courses(courses):
+    raw_courses = []
+    for course in courses:
+        splitted = course.split()
+        raw_course_string = splitted[1] +  ' ' + splitted[2]
+        raw_courses.append(raw_course_string)
+    return raw_courses
+        
+def get_list_of_classes_in_minor(courses, minor):
+    classes_in_minor = []
+    for course in courses:
+        if minor.code in course:
+            classes_in_minor.append(course)
+    return classes_in_minor
+
 # unformatted_text = pdf_to_text('dars.pdf') 
 unformatted_text = pdf_to_text('dara2.pdf') 
 lines = format_text_in_array(unformatted_text)
@@ -72,4 +88,11 @@ grades = [s for s in lines if not is_class(s)]
 
 merged = [(classes[i], grades[i]) for i in range(0, len(classes))]
 passed_classes = [class_and_grade for class_and_grade in merged if passed_class(class_and_grade)]
-print(passed_classes)
+# print(passed_classes)
+computer_science_minor = minor('Computer Science', 'CS', ['CS 125', 'CS 173', 'CS 225'], 11, ['CS 233', 'CS 241', 'CS 357', 'CS 374', 'CS 410'], 9, [['CS 125', 'CS 173', 'CS 225']])
+# print(construct_raw_courses(classes))
+raw_courses = construct_raw_courses(classes)
+# print (get_list_of_classes_in_minor(raw_courses, computer_science_minor))
+courses_in_minor = get_list_of_classes_in_minor(raw_courses, computer_science_minor)
+print (computer_science_minor.valid_required_classes_subset(courses_in_minor))
+
