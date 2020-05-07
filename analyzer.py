@@ -4,6 +4,7 @@ from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
 from io import BytesIO
 import re
+from dataclasses import dataclass
 
 def pdf_to_text(path):
     manager = PDFResourceManager()
@@ -63,7 +64,7 @@ def passed_class(x):
             return True
     return False
 
-# unformatted_text = pdf_to_text('dara2.pdf') 
+# unformatted_text = pdf_to_text('dars.pdf') 
 unformatted_text = pdf_to_text('dara2.pdf') 
 lines = format_text_in_array(unformatted_text)
 classes = [s for s in lines if is_class(s)]
