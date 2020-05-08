@@ -73,12 +73,21 @@ def get_courses_without_hours_and_sem(passed_classes): #do we care about getting
         courses_without_hours.append(course_string)
     return courses_without_hours
         
-def get_list_of_classes_in_minor(courses, minor):
+def get_courses_in_minor(courses, minor): #changed to take passed classes tuple
     classes_in_minor = []
     for course in courses:
         if minor.code in course:
             classes_in_minor.append(course)
     return classes_in_minor
+
+def get_total_hours_of_courses_in_minor(passed_courses, minor):
+    total_hours = 0
+    courses_with_credit_no_grade_and_sem = get_classes_with_credit_no_grade_and_sem(passed_courses)
+    for course_grade_pair in courses_with_credit_no_grade_and_sem:
+        if minor.code in course_grade_pair[0]:
+            total_hours += float(course_grade_pair[1])
+    return total_hours
+
 
 def get_classes_with_credit_no_grade_and_sem(passed_classes): #you should only get awarded classes if you pass it right?
     lone_courses = get_courses_without_hours_and_sem(passed_classes)
@@ -98,8 +107,10 @@ merged = [(classes[i], grades[i]) for i in range(0, len(classes))]
 passed_classes = [class_and_grade for class_and_grade in merged if passed_class(class_and_grade)]
 computer_science_minor = minor('Computer Science', 'CS', ['CS 125', 'CS 173', 'CS 225'], 11, ['CS 233', 'CS 241', 'CS 357', 'CS 374', 'CS 410'], 9, [['CS 125', 'CS 173', 'CS 225']])
 courses_without_hours = get_courses_without_hours_and_sem(passed_classes)
-courses_in_minor = get_list_of_classes_in_minor(courses_without_hours, computer_science_minor)
+courses_in_minor = get_courses_in_minor(courses_without_hours, computer_science_minor)
 
-print (computer_science_minor.valid_required_classes_subset(courses_in_minor))
+# print (computer_science_minor.valid_required_classes_subset(courses_in_minor))
 
-print (get_classes_with_credit_no_grade_and_sem(passed_classes))
+# print (get_classes_with_credit_no_grade_and_sem(passed_classes))
+print (passed_classes)
+print (get_total_hours_of_courses_in_minor(passed_classes, computer_science_minor))
