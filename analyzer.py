@@ -56,8 +56,8 @@ def is_class(s):
     return not re.match('([0-9])', s) # lines is comprised of classes and their corresponding grades. Grades will start with a number while classes start with a character (indicating semester when class was taken)
 
 def passed_class(x):
-    #Need more info on how classes displayed in dars report for this
-    passing_grades = ['PS', 'A', 'B', 'C', 'D-', 'S']
+    #Need more info on how classes displayed in dars report for this. What should we do about inprogress courses (count them as passed or not)? I'll count them for now
+    passing_grades = ['PS', 'A', 'B', 'C', 'D-', 'S', 'IP']
     grade = x[1]
     
     for pg in passing_grades:
@@ -65,13 +65,13 @@ def passed_class(x):
             return True
     return False
 
-def construct_raw_courses(courses):
-    raw_courses = []
-    for course in courses:
-        splitted = course.split()
-        raw_course_string = splitted[1] +  ' ' + splitted[2]
-        raw_courses.append(raw_course_string)
-    return raw_courses
+def get_courses_without_hours_and_sem(passed_classes): #do we care about getting a list of courses that contains courses one didn't recieve credit for?
+    courses_without_hours = []
+    for course_grade_pair in passed_classes:
+        splitted = course_grade_pair[0].split()
+        course_string = splitted[1] +  ' ' + splitted[2]
+        courses_without_hours.append(course_string)
+    return courses_without_hours
         
 def get_list_of_classes_in_minor(courses, minor):
     classes_in_minor = []
@@ -80,7 +80,15 @@ def get_list_of_classes_in_minor(courses, minor):
             classes_in_minor.append(course)
     return classes_in_minor
 
-# unformatted_text = pdf_to_text('dars.pdf') 
+def get_classes_with_credit_no_grade_and_sem(passed_classes): #you should only get awarded classes if you pass it right?
+    lone_courses = get_courses_without_hours_and_sem(passed_classes)
+    classes_w_credit_wo_grade = []
+    for course_grade_pair, course in zip(passed_classes, lone_courses):
+        raw_grade_string = course_grade_pair[1].split()
+        classes_w_credit_wo_grade.append((course, raw_grade_string[0]))
+    return classes_w_credit_wo_grade
+
+
 unformatted_text = pdf_to_text('dara2.pdf') 
 lines = format_text_in_array(unformatted_text)
 classes = [s for s in lines if is_class(s)]
@@ -88,11 +96,10 @@ grades = [s for s in lines if not is_class(s)]
 
 merged = [(classes[i], grades[i]) for i in range(0, len(classes))]
 passed_classes = [class_and_grade for class_and_grade in merged if passed_class(class_and_grade)]
-# print(passed_classes)
 computer_science_minor = minor('Computer Science', 'CS', ['CS 125', 'CS 173', 'CS 225'], 11, ['CS 233', 'CS 241', 'CS 357', 'CS 374', 'CS 410'], 9, [['CS 125', 'CS 173', 'CS 225']])
-# print(construct_raw_courses(classes))
-raw_courses = construct_raw_courses(classes)
-# print (get_list_of_classes_in_minor(raw_courses, computer_science_minor))
-courses_in_minor = get_list_of_classes_in_minor(raw_courses, computer_science_minor)
+courses_without_hours = get_courses_without_hours_and_sem(passed_classes)
+courses_in_minor = get_list_of_classes_in_minor(courses_without_hours, computer_science_minor)
+
 print (computer_science_minor.valid_required_classes_subset(courses_in_minor))
 
+print (get_classes_with_credit_no_grade_and_sem(passed_classes))
