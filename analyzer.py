@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from minor import minor
 import sys
 from os import path
+# import json as j
 
 # @profile
 def pdf_to_text(path):
@@ -107,8 +108,6 @@ def get_classes_with_credit_no_grade_and_sem(passed_classes): #you should only g
         classes_w_credit_wo_grade.append((course, raw_grade_string[0]))
     return classes_w_credit_wo_grade
 
-
-
 try:
     unformatted_text = pdf_to_text(sys.argv[len(sys.argv) - 1])
 except IOError as e:
@@ -128,11 +127,16 @@ computer_science_minor = minor('Computer Science', 'CS', ['CS 125', 'CS 173', 'C
 courses_without_hours = get_courses_without_hours_and_sem(passed_classes)
 courses_in_minor = get_courses_in_minor(courses_without_hours, computer_science_minor)
 
-print (computer_science_minor.valid_required_classes_subset(courses_in_minor))
-
-print (get_classes_with_credit_no_grade_and_sem(passed_classes))
+# print (computer_science_minor.valid_required_classes_subset(courses_in_minor))
 
 # print (get_classes_with_credit_no_grade_and_sem(passed_classes))
-print (passed_classes)
+
+print (courses_without_hours)
+print(passed_classes)
+# json = j.dumps(dict(passed_classes))
+# print(json)
+# with open("sample.json", "x") as outfile:
+#     outfile.write(json)
+
 # print (get_total_hours_of_courses_in_minor(passed_classes, computer_science_minor))
 # print(sys.argv[len(sys.argv) - 1])
