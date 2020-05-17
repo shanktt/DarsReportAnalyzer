@@ -7,6 +7,7 @@ import re
 from dataclasses import dataclass
 from minor import minor
 
+# @profile
 def pdf_to_text(path):
     manager = PDFResourceManager()
     retstr = BytesIO()
@@ -22,6 +23,7 @@ def pdf_to_text(path):
     retstr.close()
     return text
 
+# @profile
 def format_text_in_array(unformatted_text):
     text = unformatted_text.decode('utf-8')
     classes_unformatted = text[text.rfind("SUMMARY OF COURSES TAKEN"):text.rfind("COLLEGE GPA")]
@@ -47,14 +49,17 @@ def format_text_in_array(unformatted_text):
 
     return lines
 
+# @profile
 def is_valid(s):
     trans = re.sub('^([1-9]|1[012])[/]([0-9]|[1-9][0-9])[/](19|20)\d\d$', '', s) # checks for date in m/d/yy format (ugh hate this format why does it exist)
     trans = re.sub('^([1-9]|1[012])[/]([0-9]|[1-9][0-9])$', '', trans) # checks for date in m/d format (ugh again)
     return trans.strip()  # Empty strings are falsy which means they are considered false in a boolean context
 
+# @profile
 def is_class(s):
     return not re.match('([0-9])', s) # lines is comprised of classes and their corresponding grades. Grades will start with a number while classes start with a character (indicating semester when class was taken)
 
+# @profile
 def passed_class(x):
     #Need more info on how classes displayed in dars report for this. What should we do about inprogress courses (count them as passed or not)? I'll count them for now
     passing_grades = ['PS', 'A', 'B', 'C', 'D-', 'S', 'IP']
@@ -65,6 +70,7 @@ def passed_class(x):
             return True
     return False
 
+# @profile
 def get_courses_without_hours_and_sem(passed_classes): #do we care about getting a list of courses that contains courses one didn't recieve credit for?
     courses_without_hours = []
     for course_grade_pair in passed_classes:
@@ -72,7 +78,8 @@ def get_courses_without_hours_and_sem(passed_classes): #do we care about getting
         course_string = splitted[1] +  ' ' + splitted[2]
         courses_without_hours.append(course_string)
     return courses_without_hours
-        
+
+# @profile    
 def get_courses_in_minor(courses, minor): #changed to take passed classes tuple
     classes_in_minor = []
     for course in courses:
@@ -80,6 +87,7 @@ def get_courses_in_minor(courses, minor): #changed to take passed classes tuple
             classes_in_minor.append(course)
     return classes_in_minor
 
+# @profile
 def get_total_hours_of_courses_in_minor(passed_courses, minor):
     total_hours = 0
     courses_with_credit_no_grade_and_sem = get_classes_with_credit_no_grade_and_sem(passed_courses)
@@ -88,7 +96,7 @@ def get_total_hours_of_courses_in_minor(passed_courses, minor):
             total_hours += float(course_grade_pair[1])
     return total_hours
 
-
+# @profile
 def get_classes_with_credit_no_grade_and_sem(passed_classes): #you should only get awarded classes if you pass it right?
     lone_courses = get_courses_without_hours_and_sem(passed_classes)
     classes_w_credit_wo_grade = []
@@ -98,7 +106,7 @@ def get_classes_with_credit_no_grade_and_sem(passed_classes): #you should only g
     return classes_w_credit_wo_grade
 
 
-unformatted_text = pdf_to_text('dara2.pdf') 
+unformatted_text = pdf_to_text('ameyapg2.pdf') 
 lines = format_text_in_array(unformatted_text)
 classes = [s for s in lines if is_class(s)]
 grades = [s for s in lines if not is_class(s)]
@@ -109,8 +117,9 @@ computer_science_minor = minor('Computer Science', 'CS', ['CS 125', 'CS 173', 'C
 courses_without_hours = get_courses_without_hours_and_sem(passed_classes)
 courses_in_minor = get_courses_in_minor(courses_without_hours, computer_science_minor)
 
-# print (computer_science_minor.valid_required_classes_subset(courses_in_minor))
+print (computer_science_minor.valid_required_classes_subset(courses_in_minor))
 
-# print (get_classes_with_credit_no_grade_and_sem(passed_classes))
-print (passed_classes)
+print (get_classes_with_credit_no_grade_and_sem(passed_classes))
+
 print (get_total_hours_of_courses_in_minor(passed_classes, computer_science_minor))
+print("test")
