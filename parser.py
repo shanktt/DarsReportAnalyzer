@@ -29,8 +29,11 @@ def unformatted_string_to_classes(text):
     sat_act_credit = act_sat_credit(text)
     print (sat_act_credit)
 
-# Function takes a string representation of the transcript and returns a list of string that are classes a student has recieved credit for from the the act/sat
+# Function takes a string representation of the transcript and returns a list of tuples that are classes a student has recieved credit for from the the act/sat
 # Function is a helper function for unformatted_string_to_classes
+# Currently the only class one can recieve credit for from the act/sat is rhet 105 it seems
+# TODO: Obtain a transcript where a student does not have credit for RHET 105 and adapt this function for that case
+# It could be possible to search the entire string for 'RHET' and if it doesn't exist return an empty list
 def act_sat_credit(text):
 
     # Get the portion of the string that contains the credit earned from sat/act
