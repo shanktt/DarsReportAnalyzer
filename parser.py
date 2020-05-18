@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from minor import minor
 
-# @profile
+# Function takes the path to a pdf file and returns a string
 def pdf_to_text(path):
     manager = PDFResourceManager()
     retstr = BytesIO()
@@ -21,9 +21,8 @@ def pdf_to_text(path):
     filepath.close()
     device.close()
     retstr.close()
-    text = unformatted_text.decode('utf-8')
+    text = text.decode('utf-8')
     return text
 
 unformatted_text = pdf_to_text('test.pdf') 
-print (unformatted_text.decode('utf-8'))\
-# print (unformatted_text)
+print (unformatted_text)
