@@ -35,9 +35,9 @@ class minor:
     def __repr__(self):
         return (f'{self.name}, {self.total_credits}, {self.required_courses}, {self.required_groups}')
 
-cs_group = group(2, 3, ['CS 233', 'CS 241', 'CS 357', 'CS 374'])
-comp_sci_minor = minor('Computer Science', ['CS 125', 'CS 173', 'CS 225'], [cs_group], 20)
-print(comp_sci_minor)
+# cs_group = group(2, 3, ['CS 233', 'CS 241', 'CS 357', 'CS 374'])
+# comp_sci_minor = minor('Computer Science', ['CS 125', 'CS 173', 'CS 225'], [cs_group], 20)
+# print(comp_sci_minor)
 
 # computer_science_minor = minor('Computer Science', ['CS 125', 'CS 173', 'CS 225'], 11, ['CS 233', 'CS 241', 'CS 357', 'CS 374', 'CS 410'], 9, [['CS 125', 'CS 173', 'CS 225']])
 # # print(computer_science_minor)
