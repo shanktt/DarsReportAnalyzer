@@ -1,5 +1,5 @@
 class course:
-    def __init__(self, dept_, course_num_, credit_hours_):
+    def __init__(self, dept_ : str, course_num_ : int, credit_hours_ : int):
         self.dept = dept_
         self.course_num = course_num_
         self.credit_hours = credit_hours_

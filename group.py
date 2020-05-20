@@ -16,7 +16,7 @@ class group:
     def __str__(self):
         return (f'{self.__class__.__name__}({self.goal_type.name}, {self.goal_num}, {self.courses})')
 
-var = group(goal.credit_hours, 4, [course("CS", 125, 4), course("CS", 173, 4), course("CS", 225, 4)])
-print(var)
+# var = group(goal.credit_hours, 4, [course("CS", 125, 4), course("CS", 173, 4), course("CS", 225, 4)])
+# print(var)
         
 
