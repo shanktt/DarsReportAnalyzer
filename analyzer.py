@@ -70,11 +70,9 @@ def format_text_in_array_regex(unformatted_text):
             c = c.split()
             courses_taken[idx].credit_hours = c[0]
             idx += 1
-    for c in courses_taken:
-        print(c)
+    # for c in courses_taken:
+    #     print(c)
     return courses_taken
-
-
 
 # @profile
 def is_valid(s):
@@ -132,13 +130,23 @@ def get_classes_with_credit_no_grade_and_sem(passed_classes): #you should only g
         classes_w_credit_wo_grade.append((course, raw_grade_string[0]))
     return classes_w_credit_wo_grade
 
+def filter_invalid_courses(courses):
+    a = []
+    for i in range(0, len(courses)):
+        if '--' not in courses[i].course_num:
+            a.append(courses[i])
+    return a
+
 try:
     unformatted_text = pdf_to_text(sys.argv[len(sys.argv) - 1])
 except IOError as e:
     print(e)
     print("Please pass in a valid path!")
 
-format_text_in_array_regex(unformatted_text)
+a = filter_invalid_courses(format_text_in_array_regex(unformatted_text))
+for x in a: print(x)
+
+
 # lines = format_text_in_array(unformatted_text)
 # classes = [s for s in lines if is_class(s)]
 # grades = [s for s in lines if not is_class(s)]
