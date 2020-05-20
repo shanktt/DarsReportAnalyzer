@@ -56,7 +56,7 @@ def format_text_in_array(unformatted_text):
 # input pdf text. Output an array of courses taken
 def format_text_in_array_regex(unformatted_text):
     text = unformatted_text.decode('utf-8')
-    courses_unformatted = text[text.rfind("SUMMARY OF COURSES TAKEN"):text.rfind("COLLEGE GPA")]
+    courses_unformatted = text[text.rfind("SUMMARY OF COURSES TAKEN"):]
     courses_unformatted = courses_unformatted.splitlines()
     courses_taken = []
     for c in courses_unformatted:   # for each unformatted line, check if it's a course. add to courses_taken if it is
@@ -73,6 +73,7 @@ def format_text_in_array_regex(unformatted_text):
     for c in courses_taken:
         print(c)
     return courses_taken
+
 
 
 # @profile
