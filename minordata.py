@@ -28,7 +28,7 @@ stuff2 = a[0][4].split(',')
 stuff2[0] = stuff2[0].replace('{', '')
 stuff2[len(stuff2) - 1] = stuff2[len(stuff2) - 1].replace('}', '')
 
-
+print("AMEYA'S BRANCH TEST")
 
 b = create_courses(stuff2)
 print(b)
