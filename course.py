@@ -9,3 +9,8 @@ class course:
     
     def __repr__(self):
         return (f'{self.__class__.__name__}({self.dept}, {self.course_num}, {self.credit_hours})')
+    
+    def __eq__(self, other):
+        if self.dept == other.dept and self.course_num == other.course_num and self.credit_hours == other.credit_hours:
+            return True
+        return False
