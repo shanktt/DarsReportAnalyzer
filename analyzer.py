@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from minor import minor
 import sys
 from os import path
+from course import course
 # import json as j
 
 # @profile
@@ -51,6 +52,28 @@ def format_text_in_array(unformatted_text):
         pass
 
     return lines
+
+# input pdf text. Output an array of courses taken
+def format_text_in_array_regex(unformatted_text):
+    text = unformatted_text.decode('utf-8')
+    courses_unformatted = text[text.rfind("SUMMARY OF COURSES TAKEN"):text.rfind("COLLEGE GPA")]
+    courses_unformatted = courses_unformatted.splitlines()
+    courses_taken = []
+    for c in courses_unformatted:   # for each unformatted line, check if it's a course. add to courses_taken if it is
+        if re.search(r"[A-Z]{2}\d{2} [A-Z]{2,4} \d(\d|-){2} \w{1,3}", c) != None:
+            c = c.split()
+            courses_taken.append(course(c[1], c[2], -1))
+
+    idx = 0
+    for c in courses_unformatted: # for each course, find associated credit hours
+        if re.search(r"\d\.0 (PS|IP|S|[A-D][-+]?)", c) != None:
+            c = c.split()
+            courses_taken[idx].credit_hours = c[0]
+            idx += 1
+    for c in courses_taken:
+        print(c)
+    return courses_taken
+
 
 # @profile
 def is_valid(s):
@@ -114,18 +137,18 @@ except IOError as e:
     print(e)
     print("Please pass in a valid path!")
 
+format_text_in_array_regex(unformatted_text)
+# lines = format_text_in_array(unformatted_text)
+# classes = [s for s in lines if is_class(s)]
+# grades = [s for s in lines if not is_class(s)]
 
-lines = format_text_in_array(unformatted_text)
-classes = [s for s in lines if is_class(s)]
-grades = [s for s in lines if not is_class(s)]
-
-merged = [(classes[i], grades[i]) for i in range(0, len(classes))]
-passed_class = [class_and_grade for class_and_grade in merged if passed_class(class_and_grade)]
-passed_classes = filter(lambda x: "--" not in x[0], passed_class)
-passed_classes = list(passed_classes)
-computer_science_minor = minor('Computer Science', 'CS', ['CS 125', 'CS 173', 'CS 225'], 11, ['CS 233', 'CS 241', 'CS 357', 'CS 374', 'CS 410'], 9, [['CS 125', 'CS 173', 'CS 225']])
-courses_without_hours = get_courses_without_hours_and_sem(passed_classes)
-courses_in_minor = get_courses_in_minor(courses_without_hours, computer_science_minor)
+# merged = [(classes[i], grades[i]) for i in range(0, len(classes))]
+# passed_class = [class_and_grade for class_and_grade in merged if passed_class(class_and_grade)]
+# passed_classes = filter(lambda x: "--" not in x[0], passed_class)
+# passed_classes = list(passed_classes)
+# computer_science_minor = minor('Computer Science', 'CS', ['CS 125', 'CS 173', 'CS 225'], 11, ['CS 233', 'CS 241', 'CS 357', 'CS 374', 'CS 410'], 9, [['CS 125', 'CS 173', 'CS 225']])
+# courses_without_hours = get_courses_without_hours_and_sem(passed_classes)
+# courses_in_minor = get_courses_in_minor(courses_without_hours, computer_science_minor)
 
 # print (computer_science_minor.valid_required_classes_subset(courses_in_minor))
 
