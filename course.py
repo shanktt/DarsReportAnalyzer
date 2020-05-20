@@ -9,7 +9,3 @@ class course:
     
     def __repr__(self):
         return (f'{self.__class__.__name__}({self.dept}, {self.course_num}, {self.credit_hours})')
-
-
-var = course("CS", 225, 4)
-print(var)
