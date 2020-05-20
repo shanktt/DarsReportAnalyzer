@@ -29,7 +29,7 @@ def pdf_to_text(path):
 # @profile
 def format_text_in_array(unformatted_text):
     text = unformatted_text.decode('utf-8')
-    classes_unformatted = text[text.rfind("SUMMARY OF COURSES TAKEN"):text.rfind("COLLEGE GPA")]
+    classes_unformatted = text[text.rfind("SUMMARY OF COURSES TAKEN"):text.rfind("COLLEGE GPA")] # start to end of pdf
     classes_unformatted = classes_unformatted.replace("SUMMARY OF COURSES TAKEN -", "")
     classes_unformatted = classes_unformatted.replace(">I", "")
     classes_unformatted = classes_unformatted.replace("My Audit - Audit Results Tab", "")
@@ -131,8 +131,8 @@ courses_in_minor = get_courses_in_minor(courses_without_hours, computer_science_
 
 # print (get_classes_with_credit_no_grade_and_sem(passed_classes))
 
-print (courses_without_hours)
-print(passed_classes)
+# print (courses_without_hours)
+# print(passed_classes)
 # json = j.dumps(dict(passed_classes))
 # print(json)
 # with open("sample.json", "x") as outfile:
