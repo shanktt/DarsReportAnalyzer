@@ -60,6 +60,13 @@ def get_courses_num_grade_and_hours(courses):
         course = splitted[1]
         course_num  = splitted[2]
         hours = splitted[4]
+
+        # ocrmypdf sometimes incorrectly removes the decimal from the number of credits for a course
+        # For example sometimes 4.0 becomes 40. This if statement adds back the missing decimal place
+        if '.' not in hours:
+            # Converts hours to a float then divide by 10 then converts back to a string
+            hours = str(float(hours) / 10)
+            
         grade = splitted[5]
 
         course_num_grade_hours.append((course, course_num, hours, grade))
