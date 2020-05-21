@@ -21,3 +21,4 @@ class course:
         if self.dept == other.dept and self.course_num == other.course_num and self.credit_hours == other.credit_hours:
             return True
         return False
+    

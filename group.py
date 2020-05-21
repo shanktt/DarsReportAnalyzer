@@ -6,7 +6,6 @@ class goal(Enum):
     credit_hours = auto()
     num_courses = auto()
 
-
 class group:
     def __init__(self, goal_type_ : goal, num_credits_or_num_courses : int, courses_ : list):
         self.goal_type = goal_type_
@@ -22,5 +21,3 @@ class group:
 # print(a == b)
 # var = group(goal.credit_hours, 4, [course("CS", 125, 4), course("CS", 173, 4), course("CS", 225, 4)])
 # print(var)
-        
-
