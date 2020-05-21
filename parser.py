@@ -48,8 +48,27 @@ def get_courses_from_text(text):
 
     return courses
 
+# Function takes an unformatted list of courses and returns a list of tuples with each tuple 
+# in the form (course (ex CS), course number, hours, grade)
+def get_courses_num_grade_and_hours(courses):
+    course_num_grade_hours = []
+
+    for s in courses:
+        # Creates a list of strings split on whitespaces
+        splitted = s.split()
+        
+        course = splitted[1]
+        course_num  = splitted[2]
+        hours = splitted[4]
+        grade = splitted[5]
+
+        course_num_grade_hours.append((course, course_num, hours, grade))
+
+    return course_num_grade_hours
+
 text = convert_pdf_text('roe3.pdf')
 courses = get_courses_from_text(text)
-print (courses)
+courses_num_grade_hours = get_courses_num_grade_and_hours(courses)
+print (courses_num_grade_hours)
 
  
