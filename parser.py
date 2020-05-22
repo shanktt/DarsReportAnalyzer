@@ -2,6 +2,8 @@ import pdftotext
 import unicodedata
 import re
 import subprocess
+import sys
+import ocrmypdf
 
 #TODO: handle cases in which the passed file is not a pdf or is not an actual dars report
 # Function takes the path to a pdf and then converts it to a string
@@ -16,8 +18,11 @@ def convert_pdf_text(path):
 
     # If whole_report is empty then a possible case is that the dars 
     # report can't be converted and must be converted using ocrmypdf
-    if not whole_report:
-        subprocess.call(['bash', 'converter.sh', path])
+    if not whole_report or path == 'roe3.pdf':
+        pass
+        # print('Hey')
+        # subprocess.call(['bash', 'converter.sh', path])
+        # ocrmypdf.ocr(path, path, deskew=True, force_ocr=True)
     
     with open(path, 'rb') as f:
         pdf = pdftotext.PDF(f)
@@ -83,7 +88,7 @@ def get_courses_num_grade_and_hours(courses):
 
     return course_num_grade_hours
 
-text = convert_pdf_text('Audit.pdf')
+text = convert_pdf_text(sys.argv[len(sys.argv) - 1])
 courses = get_courses_from_text(text)
 courses_num_grade_hours = get_courses_num_grade_and_hours(courses)
 print (courses_num_grade_hours)
