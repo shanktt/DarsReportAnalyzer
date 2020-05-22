@@ -31,8 +31,18 @@ def convert_pdf_text(path):
 
 # Function takes a dars report in string format and returns a list of unformatted strings representing that courses a student has taken or is taking
 def get_courses_from_text(text):
-    # Concatenates text to subbstring in text between last found occurences of 'SUMMARY OF COURSES TAKEN' and 'My Audit'
-    text = text[text.rfind('SUMMARY OF COURSES TAKEN'):text.rfind('My Audit')]
+
+    #TODO: Identify all different formats of dars reports
+    # Essentially that if else if tree is trying to shortern text to that only the total courses a student has taken remains in the string
+    # So we can filter this shorter and easier to parse string
+    if 'SUMMARY OF COURSES TAKEN' in text:
+        # Concatenates text to substring in text between last found occurences of 'SUMMARY OF COURSES TAKEN' to the end of text
+        text = text[text.rfind('SUMMARY OF COURSES TAKEN'):]
+    elif 'YOU MUST COMPLETE' in text:
+        # Concatenates text to substring in text between last found occurences of 'YOU MUST COMPLETE to the end of text
+        text = text[text.rfind('YOU MUST COMPLETE'):]
+
+    # text = text[text.rfind('SUMMARY OF COURSES TAKEN'):]
 
     # Creats a list of all the lines in text
     lines = text.split('\n')
@@ -73,7 +83,7 @@ def get_courses_num_grade_and_hours(courses):
 
     return course_num_grade_hours
 
-text = convert_pdf_text('roe3.pdf')
+text = convert_pdf_text('Audit.pdf')
 courses = get_courses_from_text(text)
 courses_num_grade_hours = get_courses_num_grade_and_hours(courses)
 print (courses_num_grade_hours)
