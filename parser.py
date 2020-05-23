@@ -100,6 +100,8 @@ finally:
 text = convert_pdf_text(sys.argv[len(sys.argv) - 1])
 courses = get_courses_from_text(text)
 courses_num_grade_hours = get_courses_num_grade_and_hours(courses)
+courses_num_grade_hours = filter(lambda x: '--' not in x[1], courses_num_grade_hours)
+courses_num_grade_hours = list(courses_num_grade_hours)
 print (courses_num_grade_hours)
 
  
