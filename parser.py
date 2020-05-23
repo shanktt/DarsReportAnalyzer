@@ -72,7 +72,7 @@ def get_courses_num_grade_and_hours(courses):
     for s in courses:
         # Creates a list of strings split on whitespaces
         splitted = s.split()
-        print(splitted)
+        
         course = splitted[1]
         course_num  = splitted[2]
         
