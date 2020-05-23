@@ -3,7 +3,6 @@ import unicodedata
 import re
 import subprocess
 import sys
-import ocrmypdf
 import os
 
 #TODO: handle cases in which the passed file is not a pdf or is not an actual dars report
@@ -25,7 +24,7 @@ def convert_pdf_text(path):
     # If stuff is empty then a possible case is that the dars 
     # report can't be converted and must be converted using ocrmypdf
     if stuff == '':
-        ocrmypdf.ocr(path, path, deskew=True, force_ocr=True)
+        subprocess.call(['bash', 'converter.sh', path])
     
     with open(path, 'rb') as f:
         pdf = pdftotext.PDF(f)
