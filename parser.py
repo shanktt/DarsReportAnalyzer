@@ -18,10 +18,11 @@ def convert_pdf_text(path):
         whole_report += page
 
     # check if the copied string is blank after stripping all blank lines from it
+    # if so this means that the pdf is probably unreadable
     stuff = whole_report
     stuff = os.linesep.join([s for s in stuff.splitlines() if s])
     
-    # If whole_report is empty then a possible case is that the dars 
+    # If stuff is empty then a possible case is that the dars 
     # report can't be converted and must be converted using ocrmypdf
     if stuff == '':
         ocrmypdf.ocr(path, path, deskew=True, force_ocr=True)
