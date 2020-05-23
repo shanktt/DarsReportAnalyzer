@@ -61,7 +61,7 @@ def get_courses_from_text(text):
     # [Term] and [Year] are represented by 2 uppercase letters and two digits respectively 
     # Therefore strings in lines that do not follow this format are not lines containing a course a student has taken and we can throw them out
     courses = [s for s in lines if re.match('[A-Z].*[A-Z][1-9][0-9]', s[0:4])]
-
+    
     return courses
 
 # Function takes an unformatted list of courses and returns a list of tuples with each tuple 
@@ -72,10 +72,16 @@ def get_courses_num_grade_and_hours(courses):
     for s in courses:
         # Creates a list of strings split on whitespaces
         splitted = s.split()
-        
+        print(splitted)
         course = splitted[1]
         course_num  = splitted[2]
-        hours = splitted[4]
+        
+        # check if the class is gotten by transfer credit, 
+        # if so hours will located in a different place in the list
+        if 'TR' in splitted:
+            hours = splitted[3]
+        else:
+            hours = splitted[4]
 
         # ocrmypdf sometimes incorrectly removes the decimal from the number of credits for a course
         # For example sometimes 4.0 becomes 40. This if statement adds back the missing decimal place
@@ -89,5 +95,4 @@ def get_courses_num_grade_and_hours(courses):
 
     return course_num_grade_hours
 
-# print(*get_courses_num_grade_and_hours(get_courses_from_text(convert_pdf_text('sunil.pdf'))), sep = '\n')
  
