@@ -12,16 +12,18 @@ def convert_list_to_json(courses : list, minors=None, minor=False):
     return json_string
 
 def create_json(courses_json):
-    if os.path.exists('sample.json'):
-        os.remove('sample.json')
-        f = open('sample.json', 'x')
     with open('sample.json', 'w') as outfile:
         json.dump(courses_json, outfile)
 
-# List = []
-# List.append(course('CS', 125, 4))
-# List.append(course('CS', 225, 4))
+List = []
+List.append(course('CS', 125, 4))
+List.append(course('CS', 225, 4))
+List2 = []
+List2.append(course('CS', 357, 3))
+List2.append(course('CS', 361, 3))
 
-# string = convert_list_to_json(List)
-# print(string)
-# create_json(string)
+string = convert_list_to_json(List)
+string2 = convert_list_to_json(List2)
+print(string)
+create_json(string)
+create_json(string2)
