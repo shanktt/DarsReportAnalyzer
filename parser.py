@@ -4,6 +4,8 @@ import re
 import subprocess
 import sys
 import os
+from course import course
+from collections import OrderedDict
 
 #TODO: handle cases in which the passed file is not a pdf or is not an actual dars report
 # Function takes the path to a pdf and then converts it to a string
@@ -87,8 +89,29 @@ def get_courses_num_grade_and_hours(courses):
         grade = splitted[5]
 
         course_num_grade_hours.append((course, course_num, hours, grade))
+    
+    # filter result before returning it
+    course_num_grade_hours = filter_classes(course_num_grade_hours)
 
     return course_num_grade_hours
+
+def filter_classes(classes):
+    # filter out classes with course numbers such as 1--
+    classes = filter(lambda x: '--' not in x[1], classes)
+    classes = list(classes)
+
+    # filter out duplicates courses
+    classes = list(OrderedDict.fromkeys(classes))
+    return classes
+
+def put_into_courses(courses):
+    list_of_courses = []
+    for tuple in courses:
+        list_of_courses.append(course(tuple[0], int(tuple[1]), int(float(tuple[2]))))
+    return list_of_courses
+
+def store_courses_in_json(courses):
+    pass
 
 try:
     f = open(sys.argv[len(sys.argv) - 1])
@@ -100,8 +123,8 @@ finally:
 text = convert_pdf_text(sys.argv[len(sys.argv) - 1])
 courses = get_courses_from_text(text)
 courses_num_grade_hours = get_courses_num_grade_and_hours(courses)
-courses_num_grade_hours = filter(lambda x: '--' not in x[1], courses_num_grade_hours)
-courses_num_grade_hours = list(courses_num_grade_hours)
-print (courses_num_grade_hours)
+courses_num_grade_hours = put_into_courses(courses_num_grade_hours)
+for s in courses_num_grade_hours:
+    print(s)
 
  
