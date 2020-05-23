@@ -4,6 +4,7 @@ import re
 import subprocess
 import sys
 import ocrmypdf
+import os
 
 #TODO: handle cases in which the passed file is not a pdf or is not an actual dars report
 # Function takes the path to a pdf and then converts it to a string
@@ -16,13 +17,14 @@ def convert_pdf_text(path):
     for page in pdf:
         whole_report += page
 
+    # check if the copied string is blank after stripping all blank lines from it
+    stuff = whole_report
+    stuff = os.linesep.join([s for s in stuff.splitlines() if s])
+    
     # If whole_report is empty then a possible case is that the dars 
     # report can't be converted and must be converted using ocrmypdf
-    if not whole_report or path == 'roe3.pdf':
-        pass
-        # print('Hey')
-        # subprocess.call(['bash', 'converter.sh', path])
-        # ocrmypdf.ocr(path, path, deskew=True, force_ocr=True)
+    if stuff == '':
+        ocrmypdf.ocr(path, path, deskew=True, force_ocr=True)
     
     with open(path, 'rb') as f:
         pdf = pdftotext.PDF(f)
