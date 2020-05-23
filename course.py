@@ -1,3 +1,5 @@
+import json
+
 class course:
     def __init__(self, dept_ : str, course_num_ : int, credit_hours_ : int, repl_dept_=None, repl_course_num_=None, repl_credit_hours_=None):
         self.dept = dept_
@@ -21,3 +23,12 @@ class course:
         if self.dept == other.dept and self.course_num == other.course_num and self.credit_hours == other.credit_hours:
             return True
         return False
+
+    def dump(self):
+        return {'course': {'dept': self.dept,
+                            'course_num' : self.course_num,
+                            'credit_hours' : self.credit_hours,
+                            'repl_dept' : self.repl_dept,
+                            'repl_course_num' : self.repl_course_num,
+                            'repl_credit_hours' : self.repl_credit_hours}}
+    

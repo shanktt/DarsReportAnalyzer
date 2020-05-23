@@ -2,6 +2,7 @@ import pdftotext
 import unicodedata
 import re
 import subprocess
+import os
 
 #TODO: handle cases in which the passed file is not a pdf or is not an actual dars report
 # Function takes the path to a pdf and then converts it to a string
@@ -14,18 +15,23 @@ def convert_pdf_text(path):
     for page in pdf:
         whole_report += page
 
-    # If whole_report is empty then a possible case is that the dars 
+    # check if the copied string is blank after stripping all blank lines from it
+    # if so this means that the pdf is probably unreadable
+    stuff = whole_report
+    stuff = os.linesep.join([s for s in stuff.splitlines() if s])
+    
+    # If stuff is empty then a possible case is that the dars 
     # report can't be converted and must be converted using ocrmypdf
-    if not whole_report:
+    if stuff == '':
         subprocess.call(['bash', 'converter.sh', path])
     
-    with open(path, 'rb') as f:
-        pdf = pdftotext.PDF(f)
+        with open(path, 'rb') as f:
+            pdf = pdftotext.PDF(f)
 
-    whole_report = str()
+        whole_report = str()
 
-    for page in pdf:
-        whole_report += page
+        for page in pdf:
+            whole_report += page
 
     return whole_report
 
@@ -55,7 +61,7 @@ def get_courses_from_text(text):
     # [Term] and [Year] are represented by 2 uppercase letters and two digits respectively 
     # Therefore strings in lines that do not follow this format are not lines containing a course a student has taken and we can throw them out
     courses = [s for s in lines if re.match('[A-Z].*[A-Z][1-9][0-9]', s[0:4])]
-
+    
     return courses
 
 # Function takes an unformatted list of courses and returns a list of tuples with each tuple 
@@ -69,7 +75,13 @@ def get_courses_num_grade_and_hours(courses):
         
         course = splitted[1]
         course_num  = splitted[2]
-        hours = splitted[4]
+        
+        # check if the class is gotten by transfer credit, 
+        # if so hours will located in a different place in the list
+        if 'TR' in splitted:
+            hours = splitted[3]
+        else:
+            hours = splitted[4]
 
         # ocrmypdf sometimes incorrectly removes the decimal from the number of credits for a course
         # For example sometimes 4.0 becomes 40. This if statement adds back the missing decimal place
@@ -82,10 +94,5 @@ def get_courses_num_grade_and_hours(courses):
         course_num_grade_hours.append((course, course_num, hours, grade))
 
     return course_num_grade_hours
-
-text = convert_pdf_text('Audit.pdf')
-courses = get_courses_from_text(text)
-courses_num_grade_hours = get_courses_num_grade_and_hours(courses)
-print (courses_num_grade_hours)
 
  
