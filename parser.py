@@ -91,6 +91,13 @@ def get_courses_num_grade_and_hours(courses):
 
     return course_num_grade_hours
 
+try:
+    f = open(sys.argv[len(sys.argv) - 1])
+except FileNotFoundError:
+    print("Give a valid path!")
+finally:
+    f.close()
+
 text = convert_pdf_text(sys.argv[len(sys.argv) - 1])
 courses = get_courses_from_text(text)
 courses_num_grade_hours = get_courses_num_grade_and_hours(courses)
