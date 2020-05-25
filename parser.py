@@ -4,7 +4,7 @@ import re
 import subprocess
 import os
 
-#TODO: handle cases in which the passed file is not a pdf or is not an actual dars report
+# TODO: handle cases in which the passed file is not a pdf or is not an actual dars report
 # Function takes the path to a pdf and then converts it to a string
 def convert_pdf_text(path):
     with open(path, 'rb') as f:
@@ -94,5 +94,3 @@ def get_courses_num_grade_and_hours(courses):
         course_num_grade_hours.append((course, course_num, hours, grade))
 
     return course_num_grade_hours
-
- 
