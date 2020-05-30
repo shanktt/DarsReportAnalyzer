@@ -2,17 +2,20 @@ from enum import Enum, auto
 from course import course
 
 
-class goal(Enum):
-    credit_hours = auto()
-    num_courses = auto()
+class grouptype(Enum):
+    COURSES = auto()
+    CREDIT_HOURS = auto()
 
 class group:
-    def __init__(self, goal_type_ : goal, num_credits_or_num_courses : int, courses_ : list):
+    def __init__(self, goal_type_ : grouptype, num_credits_or_num_courses : int, courses_ : list):
         self.goal_type = goal_type_
         self.goal_num = num_credits_or_num_courses
         self.courses = courses_
     
     def __str__(self):
+        return (f'{self.__class__.__name__}({self.goal_type.name}, {self.goal_num}, {self.courses})')
+    
+    def __repr__(self):
         return (f'{self.__class__.__name__}({self.goal_type.name}, {self.goal_num}, {self.courses})')
 
 
