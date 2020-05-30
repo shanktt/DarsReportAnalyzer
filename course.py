@@ -1,13 +1,14 @@
 import json
 
 class course:
-    def __init__(self, dept_ : str, course_num_ : int, credit_hours_ : int, repl_dept_=None, repl_course_num_=None, repl_credit_hours_=None):
+    def __init__(self, dept_ : str, course_num_ : int, credit_hours_ : int, repl_ : list[course]): #repl_dept_=None, repl_course_num_=None, repl_credit_hours_=None
         self.dept = dept_
         self.course_num = course_num_
         self.credit_hours = credit_hours_
-        self.repl_dept = repl_dept_
-        self.repl_course_num = repl_course_num_
-        self.repl_credit_hours = repl_credit_hours_
+        self.repl = repl_
+        # self.repl_dept = repl_dept_
+        # self.repl_course_num = repl_course_num_
+        # self.repl_credit_hours = repl_credit_hours_
     
     def __str__(self):
         if self.repl_dept is None:

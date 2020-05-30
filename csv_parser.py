@@ -5,6 +5,7 @@ from minor import minor
 def create_pd(path):
     return pd.read_csv(path)
 
+#TODO: Convert course strings into course objects
 def create_minors(df):
     minors = []
     for index, row in df.iterrows():
