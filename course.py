@@ -1,4 +1,3 @@
-# TODO: Support internal list of tuples for replacement courses
 class course:
     def __init__(self, dept_ : str, course_num_ : int, credit_hours_=None, repl_list_=None, course_pair_=None, counts_=True):
         self.dept = dept_
@@ -19,9 +18,10 @@ class course:
         return (f'{self.__class__.__name__}({self.dept}, {self.course_num}, {self.credit_hours}, {self.repl_list}, {self.course_pair}, {self.counts})')
     
     def __eq__(self, other):
-        if self.dept == other.dept and self.course_num == other.course_num and self.credit_hours == other.credit_hours and self.counts == other.counts:
-            return True
-        return False
+        return (self.dept == other.dept
+        and self.course_num == other.course_num 
+        and self.credit_hours == other.credit_hours
+        and self.counts == other.counts)
 
     def dump(self):
         return {'course': {'dept': self.dept,

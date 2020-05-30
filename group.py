@@ -1,6 +1,5 @@
-from enum import Enum, auto
+from enum import Enum
 from course import course
-
 
 class grouptype(Enum):
     COURSES = 0
@@ -22,9 +21,3 @@ class group:
         return {'group': {'goal_type' : 0 if self.goal_type == grouptype.COURSES else 1,
                           'goal_type_num' : self.goal_num,
                           'courses' : [o.dump() for o in self.courses]}}
-
-# a = course("ECE", 125, 4)
-# b = course("CS", 125, 4)
-# print(a == b)
-# var = group(goal.credit_hours, 4, [course("CS", 125, 4), course("CS", 173, 4), course("CS", 225, 4)])
-# print(var)

@@ -1,9 +1,6 @@
-from typing import List
-import collections
 from group import group
-from abc import ABC, abstractmethod
 
-class minor(ABC):
+class minor:
     def __init__(self, name_ : str, required_courses_ : list, required_groups_ : list, total_credits_ : int):
         self.name = name_
         self.required_courses = required_courses_
@@ -26,6 +23,4 @@ class minor(ABC):
         return {'minor': {'name': self.name,
                           'required_courses' : [o.dump() for o in self.required_courses],
                           'required_groups' : [o.dump() for o in self.required_groups],
-                          'total_credits' : self.total_credits}}    
-
-    # TODO: for dumps use .__str__ or repr to represent one of the courses/just repr the group as its own object figure it out
+                          'total_credits' : self.total_credits}}
