@@ -22,4 +22,10 @@ class minor(ABC):
             return True
         return False
 
+    def dump(self):
+        return {'minor': {'name': self.name,
+                          'required_courses' : [o.dump() for o in self.required_courses],
+                          'required_groups' : [o.dump() for o in self.required_groups],
+                          'total_credits' : self.total_credits}}    
+
     # TODO: for dumps use .__str__ or repr to represent one of the courses/just repr the group as its own object figure it out

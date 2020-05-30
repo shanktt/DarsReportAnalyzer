@@ -120,7 +120,8 @@ def create_minor_object(minor_tuple : tuple):
     
     return minor(minor_tuple[1], required_courses, group_list, minor_tuple[18]) # tuple[1] = minor name, tuple[18] = total required hours for minor
 
-def create_minor_list(tuple_list):
+def create_minor_list(path):
+    tuple_list = put_data_into_tuples(path)
     minor_list = []
     for x in tuple_list:
         minor_obj = create_minor_object(x)
@@ -131,7 +132,7 @@ def create_minor_list(tuple_list):
 
 ######################### testing below #########################
 
-a = put_data_into_tuples(sys.argv[len(sys.argv) - 1])
+# a = put_data_into_tuples(sys.argv[len(sys.argv) - 1])
 
 # print(a[2])
 
@@ -153,6 +154,6 @@ a = put_data_into_tuples(sys.argv[len(sys.argv) - 1])
 # print(minor)
 # print(minor.name)
 
-minors = create_minor_list(a)
-print(minors[22])
+# minors = create_minor_list(sys.argv[len(sys.argv) - 1])
+# print(minors[22])
 # print(*minors, '\n')

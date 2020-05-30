@@ -1,4 +1,3 @@
-import json
 # TODO: Support internal list of tuples for replacement courses
 class course:
     def __init__(self, dept_ : str, course_num_ : int, credit_hours_=None, repl_list_=None, course_pair_=None, counts_=True):
