@@ -13,7 +13,7 @@ class group:
         self.courses = courses_
     
     def __str__(self):
-        return (f'{self.__class__.__name__}({self.goal_type.name}, {self.goal_num}, {self.courses})')
+        return (f'{self.__class__.__name__}({self.goal_type}, {self.goal_num}, {self.courses})') #self.goal_type.name
 
 
 # a = course("ECE", 125, 4)
