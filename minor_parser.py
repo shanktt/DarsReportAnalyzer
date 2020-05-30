@@ -41,7 +41,17 @@ def create_course_list(courses : str):
         
         # ex: course_list looks like ['KIN 249', 'KIN 250 OR KIN 259', 'CS 125 AND CS 173']
         for i in course_list:
-            if 'AND' in i: # TODO: Figure out how to handle this edge case
+
+            if '/' in i:
+                dept1 = i[0:i.find('/')]
+                dept2 = i[i.find('/') + 1:i.find(' ')]
+                num = i[i.find(' ') + 1:]
+
+                num = int(num[0:1]) * -100 if 'XX' in num else int(num)
+                req_courses.append(course(dept1, num))
+                req_courses.append(course(dept2, num))
+                
+            elif 'AND' in i: # TODO: Figure out how to handle this edge case
                 List = i.split('AND')
                 List = [x.strip() for x in List]
 
