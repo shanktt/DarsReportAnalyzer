@@ -42,7 +42,20 @@ def create_course_list(courses : str):
         # ex: course_list looks like ['KIN 249', 'KIN 250 OR KIN 259', 'CS 125 AND CS 173']
         for i in course_list:
             if 'AND' in i: # TODO: Figure out how to handle this edge case
-                pass
+                List = i.split('AND')
+                List = [x.strip() for x in List]
+
+                dept = List[0][0:List[0].find(' ')]
+                num = List[0][List[0].find(' ') + 1:]
+
+                num = int(num[0:1]) * -100 if 'XX' in num else int(num)
+
+                other_dept = List[1][0:List[1].find(' ')]
+                other_num = List[1][List[1].find(' ') + 1:]
+
+                other_num = int(other_num[0:1]) * -100 if 'XX' in other_num else int(other_num)
+
+                req_courses.append(course(dept, num, course_pair_=(other_dept, other_num, None)))
             elif 'OR' in i and not ('HORT' in i or 'PORT' in i or 'KOR' in i): # to prevent issues with HORT, PORT, KOR
                 repl_list = i.split('OR')
                 repl_list = [x.strip() for x in repl_list] # strip extra spaces
@@ -141,4 +154,5 @@ a = put_data_into_tuples(sys.argv[len(sys.argv) - 1])
 # print(minor.name)
 
 minors = create_minor_list(a)
-print(*minors, '\n')
+print(minors[22])
+# print(*minors, '\n')
