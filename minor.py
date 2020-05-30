@@ -23,9 +23,3 @@ class minor(ABC):
         return False
 
     # TODO: for dumps use .__str__ or repr to represent one of the courses/just repr the group as its own object figure it out
-
-""" types of minors
-- regular minor easy to parse into groups
-- area choice minor (given areas choose classes from the areas)
-
-"""
