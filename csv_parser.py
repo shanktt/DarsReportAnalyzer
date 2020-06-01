@@ -30,7 +30,6 @@ def create_minors(df):
     return minors
 
 
-
 df = create_pd('dars_data.csv')
 minors = create_minors(df)
 for m in minors:

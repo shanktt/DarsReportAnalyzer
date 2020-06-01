@@ -7,10 +7,11 @@ class goal(Enum):
     num_courses = auto()
 
 class group:
-    def __init__(self, goal_type_ : goal, num_credits_or_num_courses : int, courses_ : list):
+    def __init__(self, goal_type_ : goal, num_credits_or_num_courses : int, courses_ : list, courses_not_allowed_ : list):
         self.goal_type = goal_type_
         self.goal_num = num_credits_or_num_courses
         self.courses = courses_
+        sefl.courses_not_allowed = courses_not_allowed_
     
     def __str__(self):
         return (f'{self.__class__.__name__}({self.goal_type}, {self.goal_num}, {self.courses})') #self.goal_type.name
