@@ -1,5 +1,4 @@
-import parser
-from course import course
+import dars_parser
 from collections import OrderedDict
 import sys
 
@@ -12,11 +11,11 @@ def filter_classes(classes : list):
     classes = list(OrderedDict.fromkeys(classes))
     return classes
 
-# create course objects (dept, course_num, credit_hours)
+# create list of tuples (dept + course_num, credit_hours)
 def put_into_courses(courses : list):
     list_of_courses = []
     for tup in courses:
-        list_of_courses.append(course(tup[0], int(tup[1]), int(float(tup[2]))))
+        list_of_courses.append((tup[0] + ' ' + tup[1], float(tup[2])))
     return list_of_courses
 
 
@@ -28,11 +27,11 @@ def put_into_courses(courses : list):
 # finally:
 #     f.close()
 
-# text = parser.convert_pdf_text(sys.argv[len(sys.argv) - 1])
-# courses = parser.get_courses_from_text(text)
-# courses_num_grade_hours = parser.get_courses_num_grade_and_hours(courses)
+# text = dars_parser.convert_pdf_text(sys.argv[len(sys.argv) - 1])
+# courses = dars_parser.get_courses_from_text(text)
+# courses_num_grade_hours = dars_parser.get_courses_num_grade_and_hours(courses)
 
-# filter result before returning it
+# # filter result before returning it
 # courses = filter_classes(courses_num_grade_hours)
 # courses = put_into_courses(courses)
 

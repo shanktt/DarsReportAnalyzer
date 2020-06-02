@@ -19,8 +19,8 @@ class minor:
             return True
         return False
 
-    def dump(self):
-        return {'minor': {'name': self.name,
-                          'required_courses' : [o.dump() for o in self.required_courses],
-                          'required_groups' : [o.dump() for o in self.required_groups],
-                          'total_credits' : self.total_credits}}
+    # def dump(self):
+    #     return {'minor': {'name': self.name,
+    #                       'required_courses' : [o.dump() for o in self.required_courses],
+    #                       'required_groups' : [o.dump() for o in self.required_groups],
+    #                       'total_credits' : self.total_credits}}
