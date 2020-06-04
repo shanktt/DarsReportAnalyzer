@@ -5,7 +5,6 @@ from minor import minor
 def create_pd(path):
     return pd.read_csv(path)
 
-#TODO: Convert course strings into course objects
 def create_minors(df):
     minors = []
     for index, row in df.iterrows():
@@ -25,21 +24,15 @@ def create_minors(df):
             # Iterate through list of courses to see if there are any repl_courses
             for course in required_courses_raw:
                 if 'REPL' in course:
-                    # Split the string into a list of courses, splitting is based on 'REPL' substring
-                    repl_course_list = course.split('REPL')
-                    # Removes any extra whitespace from strings in repl_course_list
-                    repl_course_list = [s.strip() for s in repl_course_list]
-                    # Create an entry in repl_courses_minor where the first entry in repl_course_list is the key and the following entries are the values
-                    # For example: 'CS 125 REPL ECE 220 REPL TEST 440' -> 'CS 125' : ['ECE 220', 'TEST 440']
-                    repl_courses_minor[repl_course_list[0]] = repl_course_list
-                    # Add first entry to list of required courses. Indicate that this course has repl options
-                    required_courses.append((repl_course_list[0], True))
+                    # Calls parse_repl_courses method to add to parse repl course string and append to repl_courses_minor dict 
+                    required_courses.append((parse_repl_courses(course, repl_courses_minor), True))
                 else:
                     # Add course to required_courses while stripping any extra white space. Indicate that this course has not repl options
                     required_courses.append((course.strip(), False))
         
         # Empty list to represent a list of groups for a minor
         grouplist = []
+        
         # Groups 1-6
         for n in range(1,7):
             #Checks if columns of form 'Group(n) Type:' isn't null
@@ -54,10 +47,8 @@ def create_minors(df):
 
                 for course in group_courses_raw:
                     if 'REPL' in course:
-                        repl_course_list = course.split('REPL')
-                        repl_course_list = [s.strip() for s in repl_course_list]
-                        repl_course_group[repl_course_list[0]] = repl_course_list
-                        group_courses.append((repl_course_list[0], True))
+                        # Calls parse_repl_courses method to add to parse repl course string and append to repl_course_group dict 
+                        group_courses.append((parse_repl_courses(course, repl_course_group), True))
                     else:
                         group_courses.append((course.strip(), False))
                 
@@ -76,6 +67,16 @@ def create_minors(df):
         minors.append(minor(name, required_courses, grouplist, required_hours, repl_courses_minor))
     return minors
 
+def parse_repl_courses(course_str, repl_dict):
+    # Split the string into a list of courses, splitting is based on 'REPL' substring
+    repl_course_list = course_str.split('REPL')
+    # Removes any extra whitespace from strings in repl_course_list
+    repl_course_list = [s.strip() for s in repl_course_list]
+    # Create an entry in repl_courses_minor where the first entry in repl_course_list is the key and the following entries are the values
+    # For example: 'CS 125 REPL ECE 220 REPL TEST 440' -> 'CS 125' : ['CS 125', 'ECE 220', 'TEST 440']
+    repl_dict[repl_course_list[0]] = repl_course_list
+    # Return first entry in repl_course_list
+    return repl_course_list[0]
 
 df = create_pd('minor_data.csv') 
 # create_minors(df)

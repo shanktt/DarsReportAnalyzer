@@ -13,15 +13,3 @@ class minor(ABC):
 
     def __str__(self):
         return (f'{self.name}, {self.total_credits} hrs total. Required classes: {self.required_courses}. REPL Courses: {self.repl_courses}. Required Groups: {self.required_groups}')
-
-    # def __repr__(self):
-    #     # return (f'{self.name}, {self.total_credits}, {self.required_courses}, {self.required_groups}')
-    #     return (f'{self.name}, {self.total_credits} hrs total. Required classes: {self.required_courses}. Required Groups: {self.required_groups}. REPL Courses: {self.repl_courses}')
-
-""" types of minors
-- regular minor easy to parse into groups
-- area choice minor (given areas choose classes from the areas)
-
-
-
-"""
