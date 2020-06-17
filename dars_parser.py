@@ -70,6 +70,9 @@ def get_courses_num_grade_and_hours(courses):
     course_num_grade_hours = []
 
     for s in courses:
+        # ignores any duplicate courses from the DARS report
+        if '>D' in s:
+            continue
         # Creates a list of strings split on whitespaces
         splitted = s.split()
         
@@ -88,8 +91,12 @@ def get_courses_num_grade_and_hours(courses):
         if '.' not in hours:
             # Converts hours to a float then divide by 10 then converts back to a string
             hours = str(float(hours) / 10)
-            
-        grade = splitted[5]
+
+        # format of string is different for transfer credit
+        if 'TR' in splitted:
+            grade = splitted[4]
+        else:  
+            grade = splitted[5]
 
         course_num_grade_hours.append((course, course_num, hours, grade))
 
