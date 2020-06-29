@@ -1,157 +1,86 @@
 import pandas as pd
-import sys
-import os.path
-from group import group, grouptype
+from group import group
 from minor import minor
 
-# minor_data.csv layout:
-# Name (col. 1) | List of req. courses (col. 2) | List of req. groups (col. 3 ~ 17, 1 group = 3 columns) | total req. credits (col. 18)
+def create_pd(path):
+    return pd.read_csv(path)
 
-# convert a .csv file into a list of tuples
-def csv_into_tuples(path):
-    if not os.path.exists(path):
-        print('Invalid path!')
-        sys.exit(1)
-    dataframe = pd.read_csv(path) # minor csv file doesn't have a header
-    tuple_list = []
-    for i in dataframe.itertuples():
-        if len(i) != 28: # data safety check 
-            print(i)
-            print("A row in the given .csv file is not of length 19!")
-            sys.exit(0)
-        tuple_list.append(i)
-    return tuple_list
-    
+def create_minors(df):
+    minors = []
+    for index, row in df.iterrows():
+        # Get name of the minor
+        name = row['Minor:']
 
-# creates a list of courses based of the csv file
-# accounts for replacement courses/pair courses/cross-listed courses
-def create_course_list(courses : str):
-    if not pd.isnull(courses):
-        req_courses = []
-        repl_courses = []
+        # Empty list to represent required courses for a minor
+        required_courses = []
+        # Empty list for repl_courses in a minor
+        repl_courses_minor = []
 
-        course_list = []
+        # Checks if the row isn't empty so we don't get an error
+        if not pd.isna(row['Required Classes:']):
+            # Converts a string of classses it into a list, strings are split based on commas
+            required_courses_raw = row['Required Classes:'].split(',')
         
-        course_list = courses.split(',')
-        course_list = map(lambda x : x.upper(), course_list) # ensure all strs are upper case
-        course_list = list(course_list) # ensure that list is still a list
-        course_list = [x.strip() for x in course_list] # remove leading/trailing spaces
+            # Iterate through list of courses to see if there are any repl_courses
+            for course in required_courses_raw:
+                if 'REPL' in course:
+                    # Calls parse_repl_courses method to add to parse repl course string and append to repl_courses_minor dict 
+                    required_courses.append((parse_repl_courses(course, repl_courses_minor), True))
+                else:
+                    # Add course to required_courses while stripping any extra white space. Indicate that this course has not repl options
+                    required_courses.append((course.strip(), False))
         
-        # ex: course_list looks like ['KIN 249', 'KIN 250 OR KIN 259', 'CS 125 AND CS 173', 'CS/ECE 374']
-        for i in course_list:
-            # cross-listed course case
-            if '/' in i:
-                dept1 = i[0:i.find('/')]
-                dept2 = i[i.find('/') + 1:i.find(' ')]
-                num = i[i.find(' ') + 1:]
-
-                tup = (dept1 + ' ' + num, True)
-
-                List = []
-                List.append(dept2 + ' ' + num)
-
-                tup2 = (dept1 + ' ' + num, List)
-
-                req_courses.append(tup)
-                # handle the second as a replacement course for the other
-                repl_courses.append(tup2)
-            
-            # replacement course case
-            elif 'OR' in i and not ('HORT' in i or 'PORT' in i or 'KOR' in i): # to prevent issues with HORT, PORT, KOR
-                repl_list = i.split('OR')
-                repl_list = [x.strip() for x in repl_list] # strip extra spaces
+        # Empty list to represent a list of groups for a minor
+        grouplist = []
+        
+        # Groups 1-6
+        for n in range(1,7):
+            #Checks if columns of form 'Group(n) Type:' isn't null
+            if not pd.isna(row['Group'+str(n)+' Type:']):
+                # List to represent repl courses in a group
+                repl_course_group = []
+                # List to represent list of courses in a group
+                group_courses = []
                 
-                # ex: repl_list looks like ['KIN 250', 'KIN 259']
-                first_course = repl_list.pop(0)
-                tup = (first_course, repl_list)
-             
-                repl_courses.append(tup)
-                req_courses.append((first_course, True))
-            # course not accepted for a minor case
-            # regular course case
-            else:
-                tup = (i, False)
-                                
-                req_courses.append(tup)
-        
-        return req_courses, repl_courses
-    return list(), list() # return empty list instead
+                # Converts a string of classses it into a list, strings are split based on commas
+                group_courses_raw = row['Group'+str(n)+' List:'].split(',')
 
+                for course in group_courses_raw:
+                    if 'REPL' in course:
+                        # Calls parse_repl_courses method to add to parse repl course string and append to repl_course_group dict 
+                        group_courses.append((parse_repl_courses(course, repl_course_group), True))
+                    else:
+                        group_courses.append((course.strip(), False))
+                
+                # List to represent courses that are not allowed for a group
+                unallowed_courses_group = []
+                if not pd.isna(row['Group'+str(n)+' Courses Not Allowed:']):
+                    unallowed_courses_group = row['Group'+str(n)+' Courses Not Allowed:'].split(',')
+                    unallowed_courses_group = [s.strip() for s in unallowed_courses_group]
 
-# given a tuple (a row in the spreadsheet, representing one minor), extract the required groups and return a list of groups
-def create_groups(minor_ : tuple):
-    group_list = []
-    for n in range(0, 5):  # minor has maximum of 5 groups
-        
-        # if the group's course list is empty, we are finished
-        if pd.isnull(minor_[4 + 3 * n]):
-            return group_list
-        
-        # extract group's information
-        group_course_list, repl_list = create_course_list(minor_[4 + 4 * n])
-        group_type_num = minor_[3 + 4 * n]
-        group_type = grouptype.COURSES if minor_[2 + 4 * n] == 'C' else grouptype.CREDIT_HOURS
-        group_unallowed = create_course_list(minor_[5 + 4 * n])
-        group_unallowed = group_unallowed[0]
-        
-        unallowed = []
-        
-        for i in range(0, len(group_unallowed)):
-            unallowed.append(group_unallowed[i][0])
-        
-        group_list.append(group(group_type, group_type_num, group_course_list, dict(repl_list), unallowed))
+                # Adds a group object to grouplist
+                grouplist.append(group(row['Group'+str(n)+' Type:'], row['Group'+str(n)+' Type Amt:'], group_courses, unallowed_courses_group, repl_course_group))
 
-    return group_list
+        # Get minimum number of hours to complete a minor
+        required_hours = row['Total Credit Hours:']
 
+        # Create minor object and store in minors list
+        minors.append(minor(name.upper(), required_courses, grouplist, required_hours, repl_courses_minor))
+    return minors
 
-# given a tuple (representing one minor), return a minor object
-def create_minor_object(minor_ : tuple):
-    required_courses = create_course_list(minor_[26]) # minor[2] = string with required courses
-    required_courses = required_courses[0]
-    group_list = create_groups(minor_)
-    
-    # tuple[1] = minor name, tuple[27] = total required hours for minor
-    return minor(minor_[1].upper(), required_courses, group_list, minor_[27])
+def parse_repl_courses(course_str, repl_list):
+    # Split the string into a list of courses, splitting is based on 'REPL' substring
+    repl_course_list = course_str.split('REPL')
+    # Removes any extra whitespace from strings in repl_course_list
+    repl_course_list = [s.strip() for s in repl_course_list]
+    # Append a tuple in repl_list of the REPL courses from repl_course_list
+    # For example: 'CS 125 REPL ECE 220 REPL TEST 440' -> ('CS 125', 'ECE 220', 'TEST 440)
+    repl_list.append(tuple(repl_course_list))
+    # Return first entry in repl_course_list
+    return repl_course_list[0]
 
-
-# given a path to a csv file containing minor data, return a list of minor objects
-def create_minor_list(path):
-    tuple_list = csv_into_tuples(path)
-    minor_list = []
-    for x in tuple_list:
-        minor_obj = create_minor_object(x)
-        minor_list.append(minor_obj)
-
-    return minor_list
-
-
-######################### testing below #########################
-
-# a = csv_into_tuples(sys.argv[len(sys.argv) - 1])
-# # print(a[10])
-# List = create_minor_object(a[55])
-# # # d = dict(d)
-# List = create_minor_list(sys.argv[len(sys.argv) - 1])
-# print(*List, sep='\n')
-
-# test to check for any mistakes in the excel sheet
-# List = []
-# for y in range(2, 18, 3):
-#     for x in range(0, len(a)):
-#         var = create_course_list(a[x][y])
-#         List.append(var)
-
-# print(*List, sep='\n')
-# for i in range(0, len(List)):
-#     print(i, List[i])
-
-# tup = a[2]
-# group = create_groups(tup)
-# print(group)
-# minor = create_minor_object(tup)
-# print(minor)
-# print(minor.name)
-
-# minors = create_minor_list(sys.argv[len(sys.argv) - 1])
-# print(minors[22])
-# print(*minors, '\n')
+# df = create_pd('minor_data.csv') 
+# # create_minors(df)
+# minors = create_minors(df)
+# for m in minors:
+#     print (m)
