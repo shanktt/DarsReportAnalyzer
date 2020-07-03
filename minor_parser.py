@@ -15,6 +15,8 @@ def create_minors(df):
         required_courses = []
         # Empty list for repl_courses in a minor
         repl_courses_minor = []
+        # Set to represent set of all course departments in minor
+        depts = set()
 
         # Checks if the row isn't empty so we don't get an error
         if not pd.isna(row['Required Classes:']):
@@ -25,10 +27,11 @@ def create_minors(df):
             for course in required_courses_raw:
                 if 'REPL' in course:
                     # Calls parse_repl_courses method to add to parse repl course string and append to repl_courses_minor dict 
-                    required_courses.append((parse_repl_courses(course, repl_courses_minor), True))
+                    required_courses.append((parse_repl_courses(course, repl_courses_minor, depts), True))
                 else:
                     # Add course to required_courses while stripping any extra white space. Indicate that this course has not repl options
                     required_courses.append((course.strip(), False))
+                    depts.add(course.strip().split(' ')[0])
         
         # Empty list to represent a list of groups for a minor
         grouplist = []
@@ -47,10 +50,12 @@ def create_minors(df):
 
                 for course in group_courses_raw:
                     if 'REPL' in course:
-                        # Calls parse_repl_courses method to add to parse repl course string and append to repl_course_group dict 
-                        group_courses.append((parse_repl_courses(course, repl_course_group), True))
+                        # Calls parse_repl_courses method to add to parse repl course string and append to repl_course_group list 
+                        group_courses.append((parse_repl_courses(course, repl_course_group, depts), True))
                     else:
                         group_courses.append((course.strip(), False))
+                        # get the course dept/add it to the set of course depts
+                        depts.add(course.strip().split(' ')[0])
                 
                 # List to represent courses that are not allowed for a group
                 unallowed_courses_group = []
@@ -63,24 +68,26 @@ def create_minors(df):
 
         # Get minimum number of hours to complete a minor
         required_hours = row['Total Credit Hours:']
-
         # Create minor object and store in minors list
-        minors.append(minor(name.upper(), required_courses, grouplist, required_hours, repl_courses_minor))
+        minors.append(minor(name.upper(), required_courses, grouplist, required_hours, repl_courses_minor, depts))
     return minors
 
-def parse_repl_courses(course_str, repl_list):
+def parse_repl_courses(course_str, repl_list, dept_set):
     # Split the string into a list of courses, splitting is based on 'REPL' substring
     repl_course_list = course_str.split('REPL')
     # Removes any extra whitespace from strings in repl_course_list
     repl_course_list = [s.strip() for s in repl_course_list]
+    # for course in replacement list add the deptartment to the set of departments
+    [dept_set.add(s.split(' ')[0]) for s in repl_course_list]
     # Append a tuple in repl_list of the REPL courses from repl_course_list
     # For example: 'CS 125 REPL ECE 220 REPL TEST 440' -> ('CS 125', 'ECE 220', 'TEST 440)
     repl_list.append(tuple(repl_course_list))
+
     # Return first entry in repl_course_list
     return repl_course_list[0]
 
-# df = create_pd('minor_data.csv') 
+# df = create_pd('minor_data/minor_data.csv') 
 # # create_minors(df)
 # minors = create_minors(df)
-# for m in minors:
-#     print (m)
+# for i, m in enumerate(minors):
+#     print(i, m.dept_set)

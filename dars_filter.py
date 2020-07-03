@@ -1,10 +1,10 @@
-import dars_parser
+# import dars_parser
 from collections import OrderedDict
 import sys
 
 # filter out classes with course numbers such as 1--
 # filter out duplicates courses
-def filter_classes(classes : list):
+def filter_courses(classes : list):
     classes = filter(lambda x: '--' not in x[1] and 'F' not in x[3], classes)
     classes = list(classes)
 
@@ -18,6 +18,12 @@ def put_into_courses(courses : list):
         list_of_courses.append((tup[0] + ' ' + tup[1], float(tup[2])))
     return list_of_courses
 
+# get a set of all the departments from which a student has taken a course
+def get_dept_set(courses : list):
+    depts = set()
+    for c in courses:
+        depts.add(c[0])
+    return depts
 
 # TODO: make a driver class and use this code
 # try:
@@ -33,6 +39,8 @@ def put_into_courses(courses : list):
 
 # # filter result before returning it
 # courses = filter_classes(courses_num_grade_hours)
+# dept_set = get_dept_set(courses_num_grade_hours)
 # courses = put_into_courses(courses)
 
+# print(dept_set)
 # print(*courses, sep = '\n')
