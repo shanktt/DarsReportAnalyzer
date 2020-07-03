@@ -16,6 +16,7 @@ depts = dars_filter.get_dept_set(courses)
 courses = dars_filter.put_into_courses(courses)
 
 for i, m in enumerate(minors):
+    print(m)
     intersect = m.dept_set.intersection(depts)
     if len(intersect) > 0:
         print(i, m.name, intersect)
