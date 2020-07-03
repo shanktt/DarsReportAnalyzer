@@ -27,8 +27,8 @@
         <form action="/" method="POST" enctype="multipart/form-data">
           <div class="row justify-content-start">
             <div class="col-4">
-              <input type="file" class="custom-file-input" name="image" id="image">
-              <label class="custom-file-label" for="image">Select file...</label>
+              <input type="file" class="custom-file-input" name="file" id="file">
+              <label class="custom-file-label" for="file">Select file...</label>
             </div>
           </div>
           <br>
@@ -51,8 +51,8 @@
         </thead>
 
         <tbody>
-          {% if output is defined %}
-            {% for course in output %}
+          {% if courses is defined %}
+            {% for course in courses %}
               <tr>
                 <th scope="row">{{ loop.index }}</th>
                 <td>{{ course[0] }}</td>

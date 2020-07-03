@@ -3,10 +3,10 @@ import unicodedata
 import re
 import subprocess
 import os
+from collections import OrderedDict
 
-# TODO: handle cases in which the passed file is not a pdf or is not an actual dars report
 # Function takes the path to a pdf and then converts it to a string
-def convert_pdf_text(pdf):
+def convert_pdf_to_text(pdf):
     # with open(path, 'rb') as f:
     #     pdf = pdftotext.PDF(f)
 
@@ -17,23 +17,10 @@ def convert_pdf_text(pdf):
     for page in pdf:
         whole_report += page
 
-    # check if the copied string is blank after stripping all blank lines from it
-    # if so this means that the pdf is probably unreadable
-    stuff = whole_report
-    stuff = os.linesep.join([s for s in stuff.splitlines() if s])
-
-    # If stuff is empty then a possible case is that the dars
-    # report can't be converted and must be converted using ocrmypdf
-    if stuff == '':
-        subprocess.call(['bash', 'converter.sh', path])
-
-        with open(path, 'rb') as f:
-            pdf = pdftotext.PDF(f)
-
-        whole_report = str()
-
-        for page in pdf:
-            whole_report += page
+    # TODO: handle cases in which the passed file is not a pdf or is not an actual dars report
+    # if we want to implement check for valid
+    # dars, put it here - but should we even
+    # ask for entire dars report?
 
     return whole_report
 
@@ -68,10 +55,10 @@ def get_courses_from_text(text):
 
 # Function takes an unformatted list of courses and returns a list of tuples with each tuple
 # in the form (course (ex CS), course number, hours, grade)
-def get_courses_num_grade_and_hours(courses):
-    course_num_grade_hours = []
+def put_courses_into_tuples(course_text):
+    courses = []
 
-    for s in courses:
+    for s in course_text:
         # ignores any duplicate courses from the DARS report
         if '>D' in s:
             continue
@@ -100,6 +87,22 @@ def get_courses_num_grade_and_hours(courses):
         else:
             grade = splitted[5]
 
-        course_num_grade_hours.append((course, course_num, hours, grade))
+        courses.append((course, course_num, hours, grade))
 
-    return course_num_grade_hours
+    # filtering
+    courses = filter(lambda x: '--' not in x[1] and 'F' not in x[3], courses)
+    courses = list(courses)
+    courses = list(OrderedDict.fromkeys(courses))
+
+    list_of_courses = []
+    for tup in courses:
+        list_of_courses.append((tup[0] + ' ' + tup[1], float(tup[2])))
+    return list_of_courses
+
+# given a filtered list of course tuples, return just the courses
+#TODO: put in utils
+def get_courses_only(course_tuple_list : list):
+    course_list = []
+    for course in course_tuple_list:
+        course_list.append(course[0])
+    return course_list
