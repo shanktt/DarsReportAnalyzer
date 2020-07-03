@@ -1,5 +1,5 @@
 class group:
-    def __init__(self, goal_type_ : str, num_credits_or_num_courses : int, courses_ : list, unallowed_courses_ : list, repl_courses_ : dict):
+    def __init__(self, goal_type_ : str, num_credits_or_num_courses : int, courses_ : list, unallowed_courses_ : list, repl_courses_ : list):
         self.goal_type = goal_type_
         self.goal_num = num_credits_or_num_courses
         self.courses = courses_

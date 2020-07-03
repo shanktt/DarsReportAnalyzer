@@ -4,7 +4,7 @@ from group import group
 from abc import ABC, abstractmethod
 
 class minor(ABC):
-    def __init__(self, name_ : str, required_courses_ : list, required_groups_ : list, total_credits_ : int, repl_courses_ : dict):
+    def __init__(self, name_ : str, required_courses_ : list, required_groups_ : list, total_credits_ : int, repl_courses_ : list):
         self.name = name_
         self.required_courses = required_courses_
         self.required_groups = required_groups_

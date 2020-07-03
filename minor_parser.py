@@ -13,8 +13,8 @@ def create_minors(df):
 
         # Empty list to represent required courses for a minor
         required_courses = []
-        # Empty dictionary for repl_courses in a minor
-        repl_courses_minor = {}
+        # Empty list for repl_courses in a minor
+        repl_courses_minor = []
 
         # Checks if the row isn't empty so we don't get an error
         if not pd.isna(row['Required Classes:']):
@@ -37,8 +37,8 @@ def create_minors(df):
         for n in range(1,7):
             #Checks if columns of form 'Group(n) Type:' isn't null
             if not pd.isna(row['Group'+str(n)+' Type:']):
-                # Dictionary to represent repl courses in a group
-                repl_course_group = {}
+                # List to represent repl courses in a group
+                repl_course_group = []
                 # List to represent list of courses in a group
                 group_courses = []
                 
@@ -67,14 +67,14 @@ def create_minors(df):
         minors.append(minor(name, required_courses, grouplist, required_hours, repl_courses_minor))
     return minors
 
-def parse_repl_courses(course_str, repl_dict):
+def parse_repl_courses(course_str, repl_list):
     # Split the string into a list of courses, splitting is based on 'REPL' substring
     repl_course_list = course_str.split('REPL')
     # Removes any extra whitespace from strings in repl_course_list
     repl_course_list = [s.strip() for s in repl_course_list]
-    # Create an entry in repl_courses_minor where the first entry in repl_course_list is the key and the following entries are the values
-    # For example: 'CS 125 REPL ECE 220 REPL TEST 440' -> 'CS 125' : ['CS 125', 'ECE 220', 'TEST 440']
-    repl_dict[repl_course_list[0]] = repl_course_list
+    # Append a tuple in repl_list of the REPL courses from repl_course_list
+    # For example: 'CS 125 REPL ECE 220 REPL TEST 440' -> ('CS 125', 'ECE 220', 'TEST 440)
+    repl_list.append(tuple(repl_course_list))
     # Return first entry in repl_course_list
     return repl_course_list[0]
 
