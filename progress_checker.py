@@ -36,15 +36,15 @@ def check_required_courses(mnr : minor, list_of_courses):
     intersection = get_group_intersection(mnr.get_courses(), get_courses_only(list_of_courses))
     course_goal_num = len (intersection)
 
-    if course_goal_num >= num_required_courses:
-        return course_goal_num / num_required_courses, intersection
-    elif len(mnr.repl_courses) > 0:
+    # if course_goal_num >= num_required_courses:
+    #     return course_goal_num / num_required_courses, intersection
+    #TODO: Check for weird edge cases
+    if len(mnr.repl_courses) > 0:
         for repl_tuple in mnr.repl_courses:
             matched_courses = get_group_intersection(list(repl_tuple), list_of_courses)
-            possible_double_counts = get_group_intersection(list(repl_tuple), intersection)
-            if len (matched_courses) and possible_double_counts == 0:
-                course_goal_num += 1
-                intersection.append(matched_courses)
+            intersection.extend(matched_courses)
+            intersection = list(set(intersection))
+            course_goal_num = len (intersection)
 
     return course_goal_num / num_required_courses, intersection
 
@@ -98,8 +98,8 @@ minors = create_minors(df)
 
 test_courses = [
     ('CS 125', 4.0),
-    ('CS 173', 4.0),
-    ('CS 225', 4.0)
+    # ('CS 173', 4.0),
+    # ('CS 225', 4.0)
 ]
 
 print (check_required_courses(minors[10], test_courses))

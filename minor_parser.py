@@ -78,8 +78,8 @@ def parse_repl_courses(course_str, repl_list):
     # Return first entry in repl_course_list
     return repl_course_list[0]
 
-df = create_pd('minor_data.csv') 
-# create_minors(df)
-minors = create_minors(df)
-for m in minors:
-    print (m)
+# df = create_pd('minor_data.csv') 
+# # create_minors(df)
+# minors = create_minors(df)
+# for m in minors:
+#     print (m.repl_courses)
