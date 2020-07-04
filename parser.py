@@ -95,4 +95,7 @@ def get_courses_num_grade_and_hours(courses):
 
     return course_num_grade_hours
 
+def get_courses_only(course_tuple_list : list):
+    return [c[0] for c in course_tuple_list]
+
  

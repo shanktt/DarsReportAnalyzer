@@ -11,3 +11,6 @@ class group:
     
     def __repr__(self):
         return (f'{self.__class__.__name__}({self.goal_type}, {self.goal_num}, {self.courses}, {self.unallowed_courses}, {self.repl_courses})') 
+
+    def get_courses(self):
+        return [c[0] for c in self.courses]

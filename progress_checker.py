@@ -1,6 +1,7 @@
 from group import group
 from minor import minor
 from minor_parser import create_pd, create_minors
+from parser import get_courses_only
 
 # This should be the process in which a students progress for minors are handled
 # 1. Take the student's list of courses from that is obtained from parser.py 
@@ -29,6 +30,23 @@ from minor_parser import create_pd, create_minors
 #                               this group. Once we proceed to
 
 
+def check_required_courses(mnr : minor, list_of_courses):
+    num_required_courses = len (mnr.required_courses)
+
+    intersection = get_group_intersection(mnr.get_courses(), get_courses_only(list_of_courses))
+    course_goal_num = len (intersection)
+
+    if course_goal_num >= num_required_courses:
+        return course_goal_num / num_required_courses, intersection
+    elif len(mnr.repl_courses) > 0:
+        for repl_tuple in mnr.repl_courses:
+            matched_courses = get_group_intersection(list(repl_tuple), list_of_courses)
+            possible_double_counts = get_group_intersection(list(repl_tuple), intersection)
+            if len (matched_courses) and possible_double_counts == 0:
+                course_goal_num += 1
+                intersection.append(matched_courses)
+
+    return course_goal_num / num_required_courses, intersection
 
 
 def check_groups(list_of_groups, list_of_courses):
@@ -42,11 +60,11 @@ def get_group_intersection(grp_courses, list_of_courses):
 def check_group(grp, list_of_courses):
     # Deal with a C type group
     if grp.goal_type == 'C':   
-        check_C_type_group(grp, list_of_courses)
+        return check_C_type_group(grp, list_of_courses)
 
     # Deal with a H type group
     elif grp.goal_type == 'H':
-        print('test')
+        return check_H_type_group(grp, list_of_courses)
 
 def check_C_type_group(grp, list_of_courses):
     #TODO: Add a utility method to group class that gets all courses from the tuples since grp.courses is a list of tuples 
@@ -75,4 +93,14 @@ def find_relevant_minor(list_of_courses, list_of_all_minors):
 
 df = create_pd('minor_data.csv') 
 minors = create_minors(df)
-check_minors(minors, 'test')
+# check_minors(minors, 'test')
+# print (minors[10])
+
+test_courses = [
+    ('CS 125', 4.0),
+    ('CS 173', 4.0),
+    ('CS 225', 4.0)
+]
+
+print (check_required_courses(minors[10], test_courses))
+print (minors[10].required_courses)
