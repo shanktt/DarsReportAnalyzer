@@ -39,6 +39,8 @@ def check_required_courses(mnr : minor, list_of_courses):
     course_goal_num = len (intersection)
 
     if course_goal_num >= num_required_courses:
+        if num_required_courses == 0:
+            return 0, intersection
         return course_goal_num / num_required_courses, intersection
     elif len(mnr.repl_courses) > 0:
         for repl_tuple in mnr.repl_courses:
@@ -47,6 +49,9 @@ def check_required_courses(mnr : minor, list_of_courses):
             if len (matched_courses) and possible_double_counts == 0:
                 course_goal_num += 1
                 intersection.append(matched_courses)
+
+    if num_required_courses == 0:
+        return 0, intersection
 
     return min(course_goal_num / num_required_courses, 1), intersection
 
@@ -164,7 +169,8 @@ roes_courses = [
 ('MATH 413', 3.0),
 ('MATH 453', 3.0),
 ('EURO 415', 3.0),
-('FR 418', 3.0)
+('FR 418', 3.0),
+('CS 433', 3.0)
 ]
 
 df = create_pd('minor_data.csv')

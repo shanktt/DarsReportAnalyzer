@@ -12,13 +12,6 @@ def file_allowed(filename):
     extension_allowed = file_extension in app.config["ALLOWED_EXTENSIONS"]
     return '.' in filename and extension_allowed
 
-@app.before_first_request
-def load_minor_data():
-    df = minor_parser.create_pd('minor_data.csv')
-    minors = minor_parser.create_minors(df)
-
-    pass
-
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_image():
@@ -47,20 +40,32 @@ def upload_image():
             minors = minor_parser.create_minors(df)
             # csminor = minors[10]
             info = []
+
             for mnr in minors:
-                info.append(mnr.name)
+
                 infotuple = progress_checker.check_total_credits_met(mnr,courses)
+
+                if (infotuple[0] == 0):
+                    continue
+
+                info.append(mnr.name)
                 info.append('total credits matched: {}, percentage completed: {}'.format(infotuple[0], str(infotuple[1]*100) + '%'))
+                reqtuple = progress_checker.check_required_courses(mnr, courses)
+                info.append('required courses completed %: {}, required courses fulfilled: {}'.format(reqtuple[0], reqtuple[1]))
+
                 for g in mnr.required_groups:
                     info.append('group:')
+
                     if g.goal_type == 'C':
                         # info.append(str(g.goal_type) + ' ' + str(progress_checker.check_C_type_group(g, courses)))
                         tuple = progress_checker.check_C_type_group(g,courses)
                         info.append('group type: {}, group percentage fulfilled: {}, group courses fulfilled: {}'.format(tuple[0], str(tuple[1]*100) + '%', tuple[2]))
+
                     else:
                         # info.append(str(g.goal_type) + ' ' + str(progress_checker.check_H_type_group(g, courses)))
                         tuple = progress_checker.check_H_type_group(g,courses)
                         info.append('group type: {}, group percentage fulfilled: {}, group courses fulfilled: {}'.format(tuple[0], str(tuple[1]*100) + '%', tuple[2]))
+
                 info.append('\n')
 
 
