@@ -45,10 +45,24 @@ def upload_image():
             #     print(c)
             df = minor_parser.create_pd('minor_data.csv')
             minors = minor_parser.create_minors(df)
-            csminor = minors[10]
+            # csminor = minors[10]
             info = []
-            for g in csminor.required_groups:
-                info.append(progress_checker.check_C_type_group(g, courses))
+            for mnr in minors:
+                info.append(mnr.name)
+                infotuple = progress_checker.check_total_credits_met(mnr,courses)
+                info.append('total credits matched: {}, percentage completed: {}'.format(infotuple[0], str(infotuple[1]*100) + '%'))
+                for g in mnr.required_groups:
+                    info.append('group:')
+                    if g.goal_type == 'C':
+                        # info.append(str(g.goal_type) + ' ' + str(progress_checker.check_C_type_group(g, courses)))
+                        tuple = progress_checker.check_C_type_group(g,courses)
+                        info.append('group type: {}, group percentage fulfilled: {}, group courses fulfilled: {}'.format(tuple[0], str(tuple[1]*100) + '%', tuple[2]))
+                    else:
+                        # info.append(str(g.goal_type) + ' ' + str(progress_checker.check_H_type_group(g, courses)))
+                        tuple = progress_checker.check_H_type_group(g,courses)
+                        info.append('group type: {}, group percentage fulfilled: {}, group courses fulfilled: {}'.format(tuple[0], str(tuple[1]*100) + '%', tuple[2]))
+                info.append('\n')
+
 
             return render_template('index.html', courses = courses, info = info)
 

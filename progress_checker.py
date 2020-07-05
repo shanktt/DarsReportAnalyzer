@@ -48,7 +48,7 @@ def check_required_courses(mnr : minor, list_of_courses):
                 course_goal_num += 1
                 intersection.append(matched_courses)
 
-    return course_goal_num / num_required_courses, intersection
+    return min(course_goal_num / num_required_courses, 1), intersection
 
 
 def check_groups(list_of_groups, list_of_courses):
@@ -75,7 +75,7 @@ def check_C_type_group(grp : group, list_of_courses : list):
     course_goal_num = len (intersection)
 
     if course_goal_num >= grp.goal_num:
-        return 'C', course_goal_num / grp.goal_num, intersection
+        return 'C', min(course_goal_num / grp.goal_num, 1), intersection
 
     # Verify no weird edge cases with this
     elif len(grp.repl_courses) > 0:
@@ -84,7 +84,10 @@ def check_C_type_group(grp : group, list_of_courses : list):
             if len (matched_courses):
                 course_goal_num += 1
                 intersection.append(matched_courses)
-        return 'C', course_goal_num / grp.goal_num, intersection
+        return 'C', min(course_goal_num / grp.goal_num, 1), intersection
+
+    return 'C', min(course_goal_num / grp.goal_num, 1), intersection
+
 
 # returns tuple: 'H', %completed, list of fulfilled courses
 def check_H_type_group(grp : group, list_of_courses : list):
@@ -97,7 +100,7 @@ def check_H_type_group(grp : group, list_of_courses : list):
             fulfilled_courses.append(course[0])
 
     print(total_hrs)
-    return 'H', total_hrs / grp.goal_num, fulfilled_courses
+    return 'H', min(total_hrs / grp.goal_num, 1), fulfilled_courses
 
 
 def check_minors(list_of_minors, list_of_courses):
@@ -119,7 +122,9 @@ def check_total_credits_met(mnr : minor, list_of_courses):
     # remove duplicates
     all_minor_courses = list(dict.fromkeys(all_minor_courses))
 
-    return len(get_group_intersection(all_minor_courses, get_courses_only(list_of_courses)))
+    fulfilled_amt = len(get_group_intersection(all_minor_courses, get_courses_only(list_of_courses)))
+
+    return fulfilled_amt, min(fulfilled_amt / mnr.total_credits, 1)
 
 
 #TODO: This method will take a students list of courses (from parser.py) and the entire list of minors (from minor_parser.py) and return a list of minors that are 'relevant'
@@ -178,27 +183,27 @@ print(check_total_credits_met(minors[10], roes_courses))
 
 
 
-driver class:
+# driver class:
 
--parse all minors from csv
+# -parse all minors from csv
 
--filter out irrelevant minors (dars has no courses in common with these minors)
+# -filter out irrelevant minors (dars has no courses in common with these minors)
 
--progress_checker:
+# -progress_checker:
 
-    -for each relevant minor
+#     -for each relevant minor
 
-        -check total credits met  (usually around 18 hrs.)
+#         -check total credits met  (usually around 18 hrs.)
 
-        -check required courses  (returns float, list of fulfilled courses)
+#         -check required courses  (returns float, list of fulfilled courses)
 
-        -for each group
+#         -for each group
 
-            -check if group fulfilled (returns float, list of fulfilled courses, type of group (c/h))
+#             -check if group fulfilled (returns float, list of fulfilled courses, type of group (c/h))
 
-    - anything else?
+#     - anything else?
 
 
--> for visualization, need:
-    -total percentage progress for top 5 ish minors completed (general overview)
-    -detailed display: for each group, display all courses and fulfilled courses, and percentages?
+# -> for visualization, need:
+#     -total percentage progress for top 5 ish minors completed (general overview)
+#     -detailed display: for each group, display all courses and fulfilled courses, and percentages?
