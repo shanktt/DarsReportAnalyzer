@@ -40,7 +40,6 @@ def check_required_courses(mnr : minor, list_of_courses):
     if len(mnr.repl_courses) > 0:
         for repl_tuple in mnr.repl_courses:
             matched_courses = get_group_intersection(list(repl_tuple), get_courses_only(list_of_courses))
-            #^Above is not working for repl classes
             intersection.extend(matched_courses)
             intersection = list(set(intersection))
             course_goal_num = len (intersection)
@@ -96,9 +95,10 @@ minors = create_minors(df)
 # print (minors[10])
 
 test_courses = [
+    ('CS 225', 4.0),
+    ('MATH 213', 4.0),
     ('ECE 220', 4.0),
-    # ('CS 173', 4.0),
-    # ('CS 225', 4.0)
+    ('KIN 249', 4.0)
 ]
 
 print (check_required_courses(minors[10], test_courses))
