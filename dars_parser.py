@@ -102,7 +102,4 @@ def put_courses_into_tuples(course_text):
 # given a filtered list of course tuples, return just the courses
 #TODO: put in utils
 def get_courses_only(course_tuple_list : list):
-    course_list = []
-    for course in course_tuple_list:
-        course_list.append(course[0])
-    return course_list
+    return [c[0] for c in course_tuple_list]

@@ -32,26 +32,45 @@ from dars_parser import get_courses_only
 
 
 
+def check_required_courses(mnr : minor, list_of_courses):
+    num_required_courses = len (mnr.required_courses)
+
+    intersection = get_group_intersection(mnr.get_courses(), get_courses_only(list_of_courses))
+    course_goal_num = len (intersection)
+
+    if course_goal_num >= num_required_courses:
+        return course_goal_num / num_required_courses, intersection
+    elif len(mnr.repl_courses) > 0:
+        for repl_tuple in mnr.repl_courses:
+            matched_courses = get_group_intersection(list(repl_tuple), list_of_courses)
+            possible_double_counts = get_group_intersection(list(repl_tuple), intersection)
+            if len (matched_courses) and possible_double_counts == 0:
+                course_goal_num += 1
+                intersection.append(matched_courses)
+
+    return course_goal_num / num_required_courses, intersection
+
+
 def check_groups(list_of_groups, list_of_courses):
     for grp in list_of_groups:
         print(grp)
 
 def get_group_intersection(grp_courses, list_of_courses):
         # Returns the number of courses that exist in both lists
-        return list(set(grp_courses).intersection(set(list_of_courses)))
+        return list(set(grp_courses).intersection(list_of_courses))
 
 def check_group(grp, list_of_courses):
     # Deal with a C type group
     if grp.goal_type == 'C':
-        check_C_type_group(grp, list_of_courses)
+        return check_C_type_group(grp, list_of_courses)
 
     # Deal with a H type group
     elif grp.goal_type == 'H':
-        print('test')
+        return check_H_type_group(grp, list_of_courses)
 
 # list of courses: ('CS 123', 4.0)  grp: a group obj: (C/H, C/H amt., [courses_1,...,courses_n],[!courses],[repl])
 # returns tuple: 'C', %completed, list of fulfilled courses
-def check_C_type_group(grp : group, list_of_courses):
+def check_C_type_group(grp : group, list_of_courses : list):
     intersection = get_group_intersection(grp.get_courses(), get_courses_only(list_of_courses))
     course_goal_num = len (intersection)
 
@@ -68,7 +87,7 @@ def check_C_type_group(grp : group, list_of_courses):
         return 'C', course_goal_num / grp.goal_num, intersection
 
 # returns tuple: 'H', %completed, list of fulfilled courses
-def check_H_type_group(grp, list_of_courses):
+def check_H_type_group(grp : group, list_of_courses : list):
     grp_courses = grp.get_courses()
     total_hrs = 0
     fulfilled_courses = []
@@ -84,6 +103,24 @@ def check_H_type_group(grp, list_of_courses):
 def check_minors(list_of_minors, list_of_courses):
     for mnr in list_of_minors:
         check_groups(mnr.required_groups, list_of_courses)
+
+def check_total_credits_met(mnr : minor, list_of_courses):
+    all_minor_courses = []
+
+    # add all required courses
+    for course in mnr.required_courses:
+        all_minor_courses.append(course[0])
+
+    # add all courses in each group
+    for group in mnr.required_groups:
+        for course in group.courses:
+            all_minor_courses.append(course[0])
+
+    # remove duplicates
+    all_minor_courses = list(dict.fromkeys(all_minor_courses))
+
+    return len(get_group_intersection(all_minor_courses, get_courses_only(list_of_courses)))
+
 
 #TODO: This method will take a students list of courses (from parser.py) and the entire list of minors (from minor_parser.py) and return a list of minors that are 'relevant'
 # to said student. Need to find set of 1-3 departments that comprise majority of the minor and see if the student has any courses in that department.
@@ -127,6 +164,41 @@ roes_courses = [
 
 df = create_pd('minor_data.csv')
 minors = create_minors(df)
+print(check_total_credits_met(minors[10], roes_courses))
+# for m in minors:
+#     print(m.name)
 
-print(check_C_type_group(minors[10].required_groups[0], roes_courses))
-print(check_H_type_group(minors[72].required_groups[0], roes_courses))
+# csminor = minors[10]
+# for g in csminor.required_groups:
+#     print(g)
+
+# print(check_C_type_group(minors[10].required_groups[0], roes_courses))
+# print(check_H_type_group(minors[72].required_groups[0], roes_courses))
+
+
+
+
+driver class:
+
+-parse all minors from csv
+
+-filter out irrelevant minors (dars has no courses in common with these minors)
+
+-progress_checker:
+
+    -for each relevant minor
+
+        -check total credits met  (usually around 18 hrs.)
+
+        -check required courses  (returns float, list of fulfilled courses)
+
+        -for each group
+
+            -check if group fulfilled (returns float, list of fulfilled courses, type of group (c/h))
+
+    - anything else?
+
+
+-> for visualization, need:
+    -total percentage progress for top 5 ish minors completed (general overview)
+    -detailed display: for each group, display all courses and fulfilled courses, and percentages?

@@ -52,13 +52,13 @@ def create_minors(df):
                     else:
                         group_courses.append((course.strip(), False))
 
-                # List to represent courses that are not allowed for a group
-                unallowed_courses_group = []
-                if not pd.isna(row['Group'+str(n)+' Courses Not Allowed:']):
-                    unallowed_courses_group = row['Group'+str(n)+' Courses Not Allowed:'].replace(' ', '').split(',')
+                # # List to represent courses that are not allowed for a group
+                # unallowed_courses_group = []
+                # if not pd.isna(row['Group'+str(n)+' Courses Not Allowed:']):
+                #     unallowed_courses_group = row['Group'+str(n)+' Courses Not Allowed:'].replace(' ', '').split(',')
 
                 # Adds a group object to grouplist
-                grouplist.append(group(row['Group'+str(n)+' Type:'], row['Group'+str(n)+' Type Amt:'], group_courses, unallowed_courses_group, repl_course_group))
+                grouplist.append(group(row['Group'+str(n)+' Type:'], row['Group'+str(n)+' Type Amt:'], group_courses, repl_course_group))
 
         # Get minimum number of hours to complete a minor
         required_hours = row['Total Credit Hours:']
@@ -82,4 +82,4 @@ def parse_repl_courses(course_str, repl_list):
 # # create_minors(df)
 # minors = create_minors(df)
 # for m in minors:
-#     print (m)
+#     print (m.repl_courses)

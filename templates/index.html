@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-
     <meta charset="utf-8">
     <title>DarsAnalyzer</title>
+    <!-- bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
+    <!-- d3.js -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
   </head>
   <body>
 
@@ -37,6 +38,40 @@
       </div>
     </div>
     <!-- end header -->
+
+    <!-- d3 script -->
+    <script>
+      dataset = [1,1,2,3,5,8,13,21];
+
+      const arcs = pie(dataset);
+
+      const svg = d3.create("svg")
+        .attr("viewBox", [0, 0, width, height]);
+
+      svg.selectAll("path")
+        .data(arcs)
+        .join("path")
+          .attr("d", function() {
+            const radius = Math.min(width, height) / 2;
+            return d3.arc().innerRadius(radius * 0.67).outerRadius(radius - 1);
+          });
+
+      pie = d3.pie()
+        .padAngle(0.01)
+        .sort(null)
+        .value(d);
+    </script>
+
+
+
+
+
+
+    {% if info is defined %}
+      {% for i in info %}
+        {{ i }}
+      {% endfor %}
+    {% endif %}
 
 
     <!-- begin table -->

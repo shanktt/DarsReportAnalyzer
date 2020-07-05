@@ -13,3 +13,6 @@ class minor(ABC):
 
     def __str__(self):
         return (f'{self.name}, {self.total_credits} hrs total. Required classes: {self.required_courses}. REPL Courses: {self.repl_courses}. Required Groups: {self.required_groups}')
+
+    def get_courses(self):
+        return [c[0] for c in self.required_courses]
