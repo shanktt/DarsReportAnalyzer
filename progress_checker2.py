@@ -165,20 +165,7 @@ def find_relevant_minor(list_of_courses, list_of_all_minors):
 
 df = create_pd('minor_data.csv') 
 minors = create_minors(df)
-# check_minors(minors, 'test')
-# print (minors[10])
 
-# test_courses = [
-#     ('CS 225', 4.0),
-#     ('MATH 213', 4.0),
-#     ('ECE 220', 4.0),
-#     ('KIN 249', 4.0)
-# ]
-
-# print (check_required_courses(minors[10], test_courses))
-# print (minors[10].required_courses)
-# check_required_courses(minors[10], test_courses)
-# Test this (Ideally this should change the list_of_student_courses variable passed into this method)
 roes_courses = [
 ('MATH 241', 4.0),
 ('CS 100', 1.0),
@@ -218,34 +205,5 @@ roes_courses = [
 ('ECE 391', 4.0)
 ]
 
-# Make this a method
-unique_group_courses_list = []
-for i in range(len(minors[10].required_groups)):
-    unique_group_courses = minors[10].required_groups[i].get_courses()
-    for j in range(len(minors[10].required_groups)):
-        if (minors[10].required_groups[i] == minors[10].required_groups[j]):
-            continue
-        unique_group_courses = list(set(unique_group_courses) - set(minors[10].required_groups[j].get_courses()))
-    unique_group_courses_list.append(unique_group_courses)
-
-# for l in unique_group_courses_list:
-    # print (l)
-
-# print (unique_group_courses_list[0])
-# print()
-# print ('intersection:')
-# print (get_group_intersection_manual(unique_group_courses_list[0], minors[10].required_groups[0], roes_courses, minors[10].required_groups[0].goal_num))
-# print()
-# print (roes_courses)
-
-
-print (check_C_type_group(minors[10].required_groups[0], unique_group_courses_list[0], roes_courses))
-print (check_C_type_group(minors[10].required_groups[1], unique_group_courses_list[1], roes_courses))
-
-# print (get_unique_courses_in_group(minors[10], minors[10].required_groups[0]))
-# print (minors[10].required_groups[0].get_repl_courses_as_flat_list())
-
-# test = minors[10].required_groups[0].convert_repl_courses_into_dict()
-# print (test)
-
-# print (test['CS 241'])
+print (check_C_type_group(minors[10].required_groups[0], get_unique_courses_in_group(minors[10], minors[10].required_groups[0]), roes_courses))
+print (check_C_type_group(minors[10].required_groups[1], get_unique_courses_in_group(minors[10], minors[10].required_groups[1]), roes_courses))
