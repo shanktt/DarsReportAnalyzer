@@ -64,27 +64,49 @@ def check_group(grp, list_of_courses):
     elif grp.goal_type == 'H':
         return check_H_type_group(grp, list_of_courses)
 
+# list_of_courses should be the original list of the student
+# this is the list of tuples that has course strings and gpa floats in a tuples together
+# we will be modifying said list in this method so the original must be passed
+def get_group_intersection_manual(unique_grp_courses: list, grp: group, list_of_student_courses: list, num_required_courses: int):
+    intersection = []
+
+    # If there are course unique to this group (ie these courses are not contained in any other groups)
+    if (len(unique_grp_courses)):
+        # Get the intersection between the student's courses and this list of unique courses
+        intersection = get_group_intersection(unique_grp_courses, get_courses_only(list_of_student_courses))
+        # If this intersection is larger than the number of courses actually required for this C type group we need to remove the extra courses
+        if (len(intersection) > num_required_courses):
+            intersection = intersection[:int(num_required_courses)]
+            # Test this (Ideally this should change the list_of_student_courses variable passed into this method)
+            list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
+            return intersection
+        elif (len(intersection) == num_required_courses):
+            # Test this (Ideally this should change the list_of_student_courses variable passed into this method)
+            list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
+            return intersection
+    
+    #TODO: Check entirety of courses within the group for any matches
+    intersection = get_group_intersection(grp.get_courses(), get_courses_only(list_of_student_courses))
+    
+    if (len(intersection) > num_required_courses):
+        intersection = intersection[:int(num_required_courses)]
+
+    list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
+
+    return intersection
+
+def check_C_type_group_2(grp: group, list_of_student_courses: list):
+    return True
+
 # list of courses: ('CS 123', 4.0)  grp: a group obj: (C/H, C/H amt., [courses_1,...,courses_n],[!courses],[repl])
 # returns tuple: 'C', %completed, list of fulfilled courses
 def check_C_type_group(grp : group, list_of_courses : list):
     intersection = get_group_intersection(grp.get_courses(), get_courses_only(list_of_courses))
     course_goal_num = len (intersection)
 
-    # Three possibilities after checking first intersection. 
-    #   1. size of intersection = grp.goal_num
-    #       In this case just return values as normal
-    #   2. size of intersection > grp.goal_num
-    #       What do we do in this case???
-    #   3. size of intersection < grp.goal_num
-    #       In this case check the repl courses
-
     if course_goal_num >= grp.goal_num:
         return ['C', course_goal_num / grp.goal_num, intersection, grp.goal_num, len(intersection)]
 
-    # if course_goal_num > grp.goal_num:
-    #     return True
-
-    # Verify no weird edge cases with this
     elif len(grp.repl_courses) > 0:
         for repl_tuple in grp.repl_courses:
             matched_courses = get_group_intersection(list(repl_tuple), list_of_courses)
@@ -133,7 +155,7 @@ minors = create_minors(df)
 # print (check_required_courses(minors[10], test_courses))
 # print (minors[10].required_courses)
 # check_required_courses(minors[10], test_courses)
-
+# Test this (Ideally this should change the list_of_student_courses variable passed into this method)
 roes_courses = [
 ('MATH 241', 4.0),
 ('CS 100', 1.0),
@@ -167,26 +189,27 @@ roes_courses = [
 ('MATH 453', 3.0),
 ('EURO 415', 3.0),
 ('FR 418', 3.0),
-('CS 433', 3.0)
+('CS 433', 3.0),
+# Added for testing:
+('CS 374', 4.0)
 ]
 
-# print ('group 1 courses: ')
-# print (minors[10].required_groups[0].get_courses())
-# print ()
-# print ('group 2 courses: ')
-# print (minors[10].required_groups[1].get_courses())
+# Make this a method
+unique_group_courses_list = []
+for i in range(len(minors[10].required_groups)):
+    unique_group_courses = minors[10].required_groups[i].get_courses()
+    for j in range(len(minors[10].required_groups)):
+        if (minors[10].required_groups[i] == minors[10].required_groups[j]):
+            continue
+        unique_group_courses = list(set(unique_group_courses) - set(minors[10].required_groups[j].get_courses()))
+    unique_group_courses_list.append(unique_group_courses)
 
-# print ()
-# print ('intersection between groups: ')
-# print (get_group_intersection(minors[10].required_groups[0].get_courses(), minors[10].required_groups[1].get_courses()))
+# for l in unique_group_courses_list:
+#     print (l)
 
-group_intersection = get_group_intersection(minors[10].required_groups[0].get_courses(), minors[10].required_groups[1].get_courses())
-
-roes_mulp_group_courses = [
-    'CS 450',
-    'CS 433'
-]
-
-print ('og progress without courses in mulp groups')
-print(check_C_type_group(minors[10].required_groups[0], roes_courses))
-print(check_C_type_group(minors[10].required_groups[1], roes_courses))
+# print (unique_group_courses_list[0])
+# print()
+print ('intersection:')
+print (get_group_intersection_manual(unique_group_courses_list[0], minors[10].required_groups[0], roes_courses, minors[10].required_groups[0].goal_num))
+print()
+print (roes_courses)
