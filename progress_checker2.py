@@ -87,6 +87,10 @@ def get_group_intersection_manual(grp : group, unique_grp_courses : list, list_o
             list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
             return intersection
     
+
+    #TODO: Need to check if the any of the courses in unique_grp_courses is a repl course before checking against the entirety of courses in the group
+
+
     # Check entirety of courses within the group for any matches
     intersection = get_intersection(grp.get_courses(), get_courses_only(list_of_student_courses))
     
@@ -191,7 +195,7 @@ roes_courses = [
 ('MATH 416', 3.0),
 ('MATH 461', 3.0),
 # ('CS 241', 4.0),
-# ('CS 450', 3.0),
+('CS 450', 3.0),
 ('MATH 413', 3.0),
 ('MATH 453', 3.0),
 ('EURO 415', 3.0),
@@ -199,7 +203,7 @@ roes_courses = [
 ('CS 433', 3.0),
 # Added for testing:
 # ('CS 374', 4.0),
-# ('ECE 391', 4.0)
+('ECE 391', 4.0)
 ]
 
 # Make this a method
@@ -222,6 +226,7 @@ for i in range(len(minors[10].required_groups)):
 # print()
 # print (roes_courses)
 
-# print (check_C_type_group(minors[10].required_groups[0], unique_group_courses_list[0], roes_courses))
+print (check_C_type_group(minors[10].required_groups[0], unique_group_courses_list[0], roes_courses))
+print (check_C_type_group(minors[10].required_groups[1], unique_group_courses_list[1], roes_courses))
 
-print (get_unique_courses_in_group(minors[10], minors[10].required_groups[0]))
+# print (get_unique_courses_in_group(minors[10], minors[10].required_groups[0]))
