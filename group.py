@@ -14,3 +14,9 @@ class group:
 
     def get_courses(self):
         return [c[0] for c in self.courses]
+
+    def get_repl_courses_as_flat_list(self):
+        return [course for courses_tuple in self.repl_courses for course in courses_tuple]
+
+    def convert_repl_courses_into_dict(self):
+        return dict([(repl_tuple[0], list(repl_tuple[1:])) for repl_tuple in self.repl_courses])
