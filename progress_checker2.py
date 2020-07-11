@@ -85,11 +85,29 @@ def get_group_intersection_manual(unique_grp_courses: list, grp: group, list_of_
             list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
             return intersection
     
-    #TODO: Check entirety of courses within the group for any matches
+    # Check entirety of courses within the group for any matches
     intersection = get_group_intersection(grp.get_courses(), get_courses_only(list_of_student_courses))
     
     if (len(intersection) > num_required_courses):
         intersection = intersection[:int(num_required_courses)]
+        list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
+        return intersection
+    elif (len(intersection) == num_required_courses):
+        list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
+        return intersection
+
+    # Check repl courses
+    if (len(grp.repl_courses)):
+        for repl_tuple in grp.repl_courses:
+            if (len(intersection) == num_required_courses):
+                break
+            # Test against case of student having CS 241 and ECE 391 credit
+            matched_course = get_group_intersection(list(repl_tuple), get_courses_only(list_of_student_courses))
+
+            if (len(get_group_intersection(matched_course, intersection))):
+                continue
+            else:
+                intersection.extend(matched_course)
 
     list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
 
@@ -178,20 +196,21 @@ roes_courses = [
 ('PSYC 100', 4.0),
 ('RHET 105', 4.0),
 ('CS 225', 4.0),
-('CS 233', 4.0),
+# ('CS 233', 4.0),
 ('MATH 441', 3.0),
 ('STAT 200', 3.0),
 ('MATH 416', 3.0),
 ('MATH 461', 3.0),
-('CS 241', 4.0),
-('CS 450', 3.0),
+# ('CS 241', 4.0),
+# ('CS 450', 3.0),
 ('MATH 413', 3.0),
 ('MATH 453', 3.0),
 ('EURO 415', 3.0),
 ('FR 418', 3.0),
 ('CS 433', 3.0),
 # Added for testing:
-('CS 374', 4.0)
+# ('CS 374', 4.0),
+('ECE 391', 4.0)
 ]
 
 # Make this a method
