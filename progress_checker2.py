@@ -69,7 +69,7 @@ def get_unique_courses_in_group(mnr : minor, grp : group):
 # this is the list of tuples that has course strings and gpa floats in a tuples together
 # we will be modifying said list in this method so the original must be passed
 #TODO: Optimize this
-def get_group_intersection_manual(grp : group, unique_grp_courses : list, list_of_student_courses : list, num_required_courses : int):
+def get_C_group_intersection_manual(grp : group, unique_grp_courses : list, list_of_student_courses : list, num_required_courses : int):
     intersection = []
 
     # If there are course unique to this group (ie these courses are not contained in any other groups)
@@ -134,7 +134,7 @@ def get_group_intersection_manual(grp : group, unique_grp_courses : list, list_o
 # list of courses: ('CS 123', 4.0)  grp: a group obj: (C/H, C/H amt., [courses_1,...,courses_n],[!courses],[repl])
 # returns tuple: 'C', %completed, list of fulfilled courses
 def check_C_type_group(grp : group, unique_grp_courses: list, student_courses_tuples : list):
-    intersection = get_group_intersection_manual(grp, unique_grp_courses, student_courses_tuples, grp.goal_num)
+    intersection = get_C_group_intersection_manual(grp, unique_grp_courses, student_courses_tuples, grp.goal_num)
     achieved_goal_num = len (intersection)
 
     return ['C', achieved_goal_num / grp.goal_num, intersection]
