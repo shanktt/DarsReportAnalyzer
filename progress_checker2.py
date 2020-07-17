@@ -55,7 +55,7 @@ def get_hours_for_courses(list_of_courses, list_of_student_courses):
         num = dict_of_student_courses.get(course, 0)
         hours += num
     
-    return num
+    return hours
 
 # This method should only be called when we have overcounted in get_H_group_intersection_manual
 def get_combo_of_courses_for_hours_requirement(list_of_courses : list, list_of_student_courses : list, required_hours : int):
@@ -138,7 +138,7 @@ def get_C_group_intersection_manual(grp : group, unique_grp_courses : list, list
             return intersection
     
 
-    #TODO: Need to check if the any of the courses in unique_grp_courses is a repl course before checking against the entirety of courses in the group
+    # Need to check if the any of the courses in unique_grp_courses is a repl course before checking against the entirety of courses in the group
     unique_grp_courses_with_repls = get_intersection(unique_grp_courses, grp.get_repl_courses_as_flat_list())
     if (len(unique_grp_courses_with_repls)):
         repl_courses_as_dict = grp.convert_repl_courses_into_dict()
@@ -193,15 +193,17 @@ def get_H_group_intersection_manual(grp : group, unique_grp_courses : list, list
         if (hours > required_hours):
             intersection = get_combo_of_courses_for_hours_requirement(intersection, list_of_student_courses, required_hours)
             # Test this (Ideally this should change the list_of_student_courses variable passed into this method)
+            hours = get_hours_for_courses(intersection, list_of_student_courses)
             list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
-            return intersection
+            return intersection, hours
         elif (len(intersection) == required_hours):
             # Test this (Ideally this should change the list_of_student_courses variable passed into this method)
+            hours = get_hours_for_courses(intersection, list_of_student_courses)
             list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
-            return intersection
+            return intersection, hours
     
 
-    #TODO: Need to check if the any of the courses in unique_grp_courses is a repl course before checking against the entirety of courses in the group
+    # Need to check if the any of the courses in unique_grp_courses is a repl course before checking against the entirety of courses in the group
     unique_grp_courses_with_repls = get_intersection(unique_grp_courses, grp.get_repl_courses_as_flat_list())
     if (len(unique_grp_courses_with_repls)):
         repl_courses_as_dict = grp.convert_repl_courses_into_dict()
@@ -216,17 +218,21 @@ def get_H_group_intersection_manual(grp : group, unique_grp_courses : list, list
     # what is happening below in the if statement
     if (len(intersection)):
         intersection.extend(get_intersection(grp.get_courses(), get_courses_only(list_of_student_courses)))
+        # Easy way to fix bug of duplicates appearing at this stage
+        intersection = list(dict.fromkeys(intersection))
     else:
         intersection = get_intersection(grp.get_courses(), get_courses_only(list_of_student_courses))
 
     hours = get_hours_for_courses(intersection, list_of_student_courses)
     if (len(intersection) > required_hours):
         intersection = get_combo_of_courses_for_hours_requirement(intersection, list_of_student_courses, required_hours)
+        hours = get_hours_for_courses(intersection, list_of_student_courses)
         list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
-        return intersection
+        return intersection, hours
     elif (len(intersection) == required_hours):
+        hours = get_hours_for_courses(intersection, list_of_student_courses)
         list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
-        return intersection
+        return intersection, hours
 
     # Check repl courses
     overcount_flag = False
@@ -247,9 +253,10 @@ def get_H_group_intersection_manual(grp : group, unique_grp_courses : list, list
     if (overcount_flag):
         intersection = get_combo_of_courses_for_hours_requirement(intersection, list_of_student_courses, required_hours)
 
+    hours = get_hours_for_courses(intersection, list_of_student_courses)
     list_of_student_courses[:] = [course_gpa_tuple for course_gpa_tuple in list_of_student_courses if course_gpa_tuple[0] not in intersection]
 
-    return intersection
+    return intersection, hours
 
 # list of courses: ('CS 123', 4.0)  grp: a group obj: (C/H, C/H amt., [courses_1,...,courses_n],[!courses],[repl])
 # returns tuple: 'C', %completed, list of fulfilled courses
@@ -262,9 +269,7 @@ def check_C_type_group(grp : group, unique_grp_courses: list, student_courses_tu
 
 # returns tuple: 'H', %completed, list of fulfilled courses
 def check_H_type_group(grp : group, unique_grp_courses: list, student_courses_tuples : list):
-    intersection = get_H_group_intersection_manual(grp, unique_grp_courses, student_courses_tuples, grp.goal_num)
-
-    achieved_hours = get_hours_for_courses(intersection, student_courses_tuples)
+    intersection, achieved_hours = get_H_group_intersection_manual(grp, unique_grp_courses, student_courses_tuples, grp.goal_num)
 
     return ['H', achieved_hours / grp.goal_num, intersection]
 
@@ -327,7 +332,7 @@ roes_courses = [
 
 # print (get_unique_courses_in_group(minors[0], minors[0].required_groups[1]))
 
-unique = get_unique_courses_in_group(minors[0], minors[0].required_groups[0])
+# unique = get_unique_courses_in_group(minors[0], minors[0].required_groups[0])
 
 # print (get_C_group_intersection_manual(minors[0].required_groups[0], unique, roes_courses, ))
 
@@ -338,4 +343,6 @@ unique = get_unique_courses_in_group(minors[0], minors[0].required_groups[0])
 
 # print (dict(roes_courses))
 
-print (get_hours_for_courses(['TEST 453'], roes_courses))
+# print (get_hours_for_courses(['TEST 453'], roes_courses))
+
+print (check_H_type_group(minors[72].required_groups[0], get_unique_courses_in_group(minors[72], minors[72].required_groups[0]), roes_courses))
