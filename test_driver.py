@@ -1,7 +1,6 @@
 import minor_parser
 import dars_parser
 import dars_filter
-import sys
 import os
 
 # basic script to show how many minors we probably have to check for most DARS Reports
@@ -25,11 +24,10 @@ def func(min_similar_depts):
             print(filename)
             for i, m in enumerate(minors):
                 # print(m)
-                
                 intersect = m.dept_set.intersection(depts)
                 if len(intersect) >= min_similar_depts:
                     count += 1
                     print(i, m.name, intersect)
             print('Intersection with {} minors'.format(count))
 if __name__ == '__main__':
-    func(2)
+    func(3)

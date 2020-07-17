@@ -1,0 +1,5 @@
+- Figure out how to link an external CSS file to layout
+- Figure out how to center align the socials
+- Make the method for spacing less jank
+- Add Alex's functionality to the page
+- Add to the about page (circle with images)
