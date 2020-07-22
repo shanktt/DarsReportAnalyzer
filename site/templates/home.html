@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container pt-5">
+    <h1 class="center">DARS Report Analyzer</h1>
+    <hr> 
+</div>
+<!-- Sexy title here -->
+<!-- put the input bar here -->
+<!-- button with form that sends form here -->
+<div class="container pt-3">
+    <div class="row pt-5">
+        <div class="col align-self-center center">
+            <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="inputGroupFile03">
+                  <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row align-items-center">
+        <div class="col align-self-center center">
+            <button type="button" class="btn btn-outline-primary">
+                Analyze Report
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container pt-5">
+    <!-- jumbotron that gives warning/advice on what to submit if u worried ab stuff -->
+    <!-- ADD FILE BAR/TITLE/DESCRIPTION OF WHAT THIS DOES -->
+    <div class="row jumbotron pt-5">
+        <div class="col-xs-12 col-sm-12 col-md-9 col-md-9 col-lg-9 col-xl-9">
+            <p class="lead">Information about being worried about security stuff. PLUS MORE STUFF IDK WHAT TO PUT FOR NOW HEHEHEHEH</p>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-3 col-md-3 col-lg-3 col-xl-3">
+            <a href="https://registrar.illinois.edu/academic-records/dars-audit/" target="_blank">
+                <button type="button" class="btn btn-outline-secondary">Generate Report</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+

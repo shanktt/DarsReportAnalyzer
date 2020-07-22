@@ -89,7 +89,7 @@ class TestENGReports:
             report = dars_parser.convert_pdf_text('dars_pdfs/ameya.pdf')
             unformatted_courses = dars_parser.get_courses_from_text(report)
             unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-            courses = dars_filter.filter_classes(unfiltered_courses)
+            courses = dars_filter.filter_courses(unfiltered_courses)
 
             assert len(courses) == 24 # should remove 7 invalid courses/4 duplicate
             assert len(courses) == len(set(courses)) # should remove duplicates (there are two ECON 1--)
@@ -102,7 +102,7 @@ class TestENGReports:
             report = dars_parser.convert_pdf_text('dars_pdfs/ameya.pdf')
             unformatted_courses = dars_parser.get_courses_from_text(report)
             unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-            courses = dars_filter.filter_classes(unfiltered_courses)
+            courses = dars_filter.filter_courses(unfiltered_courses)
             courses = dars_filter.put_into_courses(courses)
 
             assert len(courses) == 24 # ensure no data is lost
@@ -221,7 +221,7 @@ class TestENGReports:
             report = dars_parser.convert_pdf_text('dars_pdfs/amrith.pdf')
             unformatted_courses = dars_parser.get_courses_from_text(report)
             unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-            courses = dars_filter.filter_classes(unfiltered_courses)
+            courses = dars_filter.filter_courses(unfiltered_courses)
 
             assert len(courses) == 28 # should remove 2 invalid courses/4 duplicate
             assert len(courses) == len(set(courses)) # should remove duplicates (there are two ECON 1--)
@@ -233,7 +233,7 @@ class TestENGReports:
             report = dars_parser.convert_pdf_text('dars_pdfs/amrith.pdf')
             unformatted_courses = dars_parser.get_courses_from_text(report)
             unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-            courses = dars_filter.filter_classes(unfiltered_courses)
+            courses = dars_filter.filter_courses(unfiltered_courses)
             courses = dars_filter.put_into_courses(courses)
 
             assert len(courses) == 28 # ensure no data is lost
@@ -365,7 +365,7 @@ class TestLASReports:
             report = dars_parser.convert_pdf_text('dars_pdfs/roe.pdf')
             unformatted_courses = dars_parser.get_courses_from_text(report)
             unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-            courses = dars_filter.filter_classes(unfiltered_courses)
+            courses = dars_filter.filter_courses(unfiltered_courses)
 
             assert len(courses) == 31 # should remove 3 invalid courses/1 duplicate
             assert len(courses) == len(set(courses)) # should remove duplicates (there are two ECON 1--)
@@ -378,7 +378,7 @@ class TestLASReports:
             report = dars_parser.convert_pdf_text('dars_pdfs/roe.pdf')
             unformatted_courses = dars_parser.get_courses_from_text(report)
             unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-            courses = dars_filter.filter_classes(unfiltered_courses)
+            courses = dars_filter.filter_courses(unfiltered_courses)
             courses = dars_filter.put_into_courses(courses)
 
             assert len(courses) == 31 # ensure no data is lost
@@ -481,7 +481,7 @@ class TestLASReports:
             report = dars_parser.convert_pdf_text('dars_pdfs/raj.pdf')
             unformatted_courses = dars_parser.get_courses_from_text(report)
             unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-            courses = dars_filter.filter_classes(unfiltered_courses)
+            courses = dars_filter.filter_courses(unfiltered_courses)
 
             assert len(courses) == 21 # nothing should change
             assert len(courses) == len(set(courses)) # should be the same
@@ -490,7 +490,7 @@ class TestLASReports:
             report = dars_parser.convert_pdf_text('dars_pdfs/raj.pdf')
             unformatted_courses = dars_parser.get_courses_from_text(report)
             unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-            courses = dars_filter.filter_classes(unfiltered_courses)
+            courses = dars_filter.filter_courses(unfiltered_courses)
             courses = dars_filter.put_into_courses(courses)
 
             assert len(courses) == 21 # ensure no data is lost
@@ -589,7 +589,7 @@ class TestBusinessReports:
             report = dars_parser.convert_pdf_text('dars_pdfs/sunil.pdf')
             unformatted_courses = dars_parser.get_courses_from_text(report)
             unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-            courses = dars_filter.filter_classes(unfiltered_courses)
+            courses = dars_filter.filter_courses(unfiltered_courses)
 
             assert len(courses) == 18 # should remove 5 invalid courses
             assert len(courses) == len(set(courses)) # should remove duplicates (there are two ECON 1--)
@@ -603,7 +603,7 @@ class TestBusinessReports:
             report = dars_parser.convert_pdf_text('dars_pdfs/sunil.pdf')
             unformatted_courses = dars_parser.get_courses_from_text(report)
             unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-            courses = dars_filter.filter_classes(unfiltered_courses)
+            courses = dars_filter.filter_courses(unfiltered_courses)
             courses = dars_filter.put_into_courses(courses)
 
             assert len(courses) == 18 # ensure no data is lost
@@ -636,7 +636,7 @@ class TestBusinessReports:
 report = dars_parser.convert_pdf_text('dars_pdfs/amrith.pdf')
 unformatted_courses = dars_parser.get_courses_from_text(report)
 unfiltered_courses = dars_parser.get_courses_num_grade_and_hours(unformatted_courses)
-courses = dars_filter.filter_classes(unfiltered_courses)
+courses = dars_filter.filter_courses(unfiltered_courses)
 courses = dars_filter.put_into_courses(courses)
 
 print(*unfiltered_courses, sep='\n')

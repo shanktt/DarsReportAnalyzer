@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container-fluid padding">
+    <div class="row welcome text-center">
+        <div class="col-12">
+            <h1 class="display-4">Meet the Team</h1>
+        </div>
+    </div>
+    <hr>
+</div>
+
+<div class="container-fluid padding">
+    <div class="row padding align-items-stretch">
+        <div class="col-md-4 align-self-center">
+            <div class="card">
+                <img class="card-img-top" src="{{ url_for('static', filename='images/ferb.png') }}" alt="Ameya Gharpure">
+                <div class="card-body center">
+                    <h4 class="card-title">Ferb</h4>
+                    <p class="card-text">He's cold</p>
+                    <a href="#"><button type="button" class="btn btn-outline-primary">See Profile</button></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 align-self-center">
+            <div class="card">
+                <img class="card-img-top" src="{{ url_for('static', filename='images/perry.png') }}" alt="Ashank Kumar">
+                <div class="card-body center">
+                    <h4 class="card-title">Perry the Platypus</h4>
+                    <p class="card-text">He's cold</p>
+                    <a href="#"><button type="button" class="btn btn-outline-primary">See Profile</button></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 align-self-center">
+            <div class="card">
+                <img class="card-img-top" src="{{ url_for('static', filename='images/doofenshmirtz.png') }}" alt="Alex Roe">
+                <div class="card-body center">
+                    <h4 class="card-title">Dr. Doofenshmirtz</h4>
+                    <p class="card-text">He's cold</p>
+                    <a href="#"><button type="button" class="btn btn-outline-primary">See Profile</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- PICTURES OF US/DESCRIPTIONS OF US -->
