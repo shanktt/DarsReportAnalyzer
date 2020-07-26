@@ -8,25 +8,34 @@
 <!-- put the input bar here -->
 <!-- button with form that sends form here -->
 <div class="container pt-3">
-    <div class="row pt-5">
-        <div class="col align-self-center center">
-            <div class="input-group mb-3">
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="inputGroupFile03">
-                  <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+    <div class="row">
+        <div class="col-md-12 center">
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
                 </div>
-            </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
         </div>
     </div>
-    
-    <div class="row align-items-center">
+    <div class="row">
         <div class="col align-self-center center">
-            <button type="button" class="btn btn-outline-primary">
-                Analyze Report
-            </button>
+            <form action="/" method="POST" enctype="multipart/form-data">
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="pdf" id="inputGroupFile03">
+                    <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-primary">
+                    Analyze Report
+                </button>
+            </form>
         </div>
     </div>
-</div>
 
 <div class="container pt-5">
     <!-- jumbotron that gives warning/advice on what to submit if u worried ab stuff -->
