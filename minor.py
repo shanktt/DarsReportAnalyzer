@@ -20,6 +20,9 @@ class minor:
         and self.required_groups == other.required_groups and self.total_credits == other.total_credits):
             return True
         return False
+    
+    def get_courses(self):
+        return [c[0] for c in self.required_courses]
 
     # def dump(self):
     #     return {'minor': {'name': self.name,

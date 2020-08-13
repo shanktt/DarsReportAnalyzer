@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container pt-5">
+<div class="container-fluid pt-5">
     <h1 class="center">DARS Report Analyzer</h1>
-    <hr> 
+    <hr class="break"> 
 </div>
 <!-- Sexy title here -->
 <!-- put the input bar here -->
 <!-- button with form that sends form here -->
-<div class="container pt-3">
+<div class="container-fluid pt-3">
     <div class="row">
         <div class="col-md-12 center">
             {% with messages = get_flashed_messages(with_categories=True) %}
@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col align-self-center center">
+        <div class="col center">
             <form action="/" method="POST" enctype="multipart/form-data">
                 <div class="input-group mb-3">
                     <div class="custom-file">
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-<div class="container pt-5">
+<div class="container-fluid pt-5">
     <!-- jumbotron that gives warning/advice on what to submit if u worried ab stuff -->
     <!-- ADD FILE BAR/TITLE/DESCRIPTION OF WHAT THIS DOES -->
     <div class="row jumbotron pt-5">

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
+from driver import get_completion_list
 import os
 from werkzeug.utils import secure_filename
 import time
@@ -8,10 +9,10 @@ import time
 # TODO: FIGURE OUT CACHE BUSTING to reload the CSS quicker
 
 ALLOWED_EXTENSIONS = {'pdf'}
-UPLOAD_FOLDER = '/Users/ameyagharpure/DarsReportAnalyzer/site/static/pdf_uploads'
+UPLOAD_FOLDER = '/Users/ameyagharpure/DarsReportAnalyzer/site/static/pdf_upload'
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = ''
+app.config['SECRET_KEY'] = 'e36e9c8e3b3e68c2df7574eab8794a97'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
 
@@ -26,7 +27,7 @@ def home():
         # Error handling to ensure that a pdf is one the files
         # gotten via the POST request 
         if 'pdf' not in request.files:
-            flash('bro', category='danger')
+            flash('No PDF Received', category='danger')
             return redirect(request.url)
         
         # get the file from the POST request
@@ -35,20 +36,23 @@ def home():
         # Check to make sure that data is passed to the app
         # if not flash error message
         if check_file(file.filename) is None:
-            flash('gimme some data doggo', category='danger')
+            flash('No File Selected', category='danger')
             return redirect(request.url)
 
         # check to make sure the file is a valid pdf
         if not check_file(file.filename):
-            flash('bruh tf u doing gimme a pdf', category='danger')
+            flash('Please Select A PDF', category='danger')
             return redirect(request.url)
 
         # if the user doesn't select a file
         # browser might submit an empty part without filename
         if file.filename == '':
-            flash('bruh no file selected', category='danger')
+            flash('No File Selected', category='danger')
             return redirect(request.url)
         
+        # TODO: Add another check to ensure its a valid DARS Report
+
+
         if file and check_file(file.filename):
             filename = secure_filename(file.filename)
             # save the file to directory so that it can be 
@@ -77,15 +81,22 @@ def about():
 
 @app.route('/visualization')
 def visualization():
-    folder = os.listdir(UPLOAD_FOLDER)
+    # TODO: Check if Folder is empty
+    # if so redirect back to homepage
+
+    # TODO: redirect back to homepage
 
     # if no pdf is in the folder redirect to the home page
     # mayb display an error message??? cuz it should never get here without a file
     # within the directory
-    if len(folder) == 0:
+    completion_list = get_completion_list()
+
+    if completion_list == None:
+        # TODO: Make this look better
+        flash('Cannot Display Visualization', category='danger')
         return redirect(url_for('home'))
     else:
-        return render_template('visual.html', title='Visualization')
+        return render_template('visual.html', title='Visualization', completion_list=completion_list)
         
 
 ####################################### HELPER METHODS #######################################

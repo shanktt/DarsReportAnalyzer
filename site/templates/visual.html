@@ -1,4 +1,39 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1 class="center" style="color: aquamarine;">HEY AMEYA YOU SEXY BEAST</h1>
+{% if completion_list %}
+    {% for minor in completion_list %}
+        <h2>{{ minor[0] }}</h2>
+        {% for group in minor[1] %}
+            <div class="container-fluid">
+                <div class="row">
+                    <h3>{{ group[0] }}:</h3>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        {% if group[1][0] == 'C' %}
+                        <h5>By Courses</h5>
+                        {% elif group[1][0] == 'H' %}
+                            <h5>By Credit Hours</h5>
+                        {% else %}
+                            <h5>By Required Courses</h5>
+                        {% endif %}
+                    </div>
+                    <div class="col-3">
+                        <h5>Group Progress: {{ group[1][1] }}%</h5>
+                    </div>
+                    <div class="col-6">
+                        <h5>Courses Fulfilling Requirement: {{ group[1][2] }}</h5>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        
+        {% if not loop.last %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+    
+{% endif %}
+
 {% endblock content %}

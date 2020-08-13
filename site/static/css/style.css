@@ -5,10 +5,20 @@
 .my-row {
     border: 3px solid red;
     height: 300px;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 .my-col {
     border: 3px solid blue; 
     align-content: center;
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&family=Teko&family=Ubuntu&display=swap');
+html, body{
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(to bottom right, pink, #4D2BE2);
 }
 
 .ml-auto .dropdown-menu {
@@ -18,6 +28,63 @@
 
 .center{
     text-align: center;
+}
+
+/* Navbar styling */
+.navbar {
+    padding: .8rem;
+}
+
+.nav-item {
+    padding-right: 20px;
+}
+
+.nav-link{
+    font-size: 1.1em;
+}
+
+/* jumbotron styling */
+.jumbotron{
+    padding: 1rem;
+    border-radius: 0;
+    background: none;
+    /* width: 75%; */
+}
+
+.padding{
+    padding-bottom: 2rem;
+}
+
+.break{
+    width: 100% !important; 
+    border-top: 2px solid #b4b4b4;
+    margin-top: .3rem;
+    margin-bottom: 1rem;
+}
+
+.social h2{
+    font-size: 2.5em;
+    color: #9a9a9a;
+}
+
+.social-buttons{
+    padding-top: 1rem;
+}
+
+.social a{
+    font-size: 2em;
+    padding: 1rem;
+    color:#9a9a9a
+}
+
+.social a:hover,.social a:active,.social a:focus{
+    color:#337ab7
+}
+
+footer{
+    background-color: #3f3f3f;
+    /* width: 100%; */
+    padding-top: 2rem;
 }
 
 

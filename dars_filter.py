@@ -4,7 +4,7 @@ import sys
 # filter out classes with course numbers such as 1--
 # filter out duplicates courses
 def filter_courses(classes : list):
-    classes = filter(lambda x: '--' not in x[1] and 'F' not in x[3], classes)
+    classes = filter(lambda x: '--' not in x[1] and ('F' not in x[3] or 'NP' in x[3]), classes)
     classes = list(classes)
 
     classes = list(OrderedDict.fromkeys(classes))
@@ -23,23 +23,3 @@ def get_dept_set(courses : list):
     for c in courses:
         depts.add(c[0])
     return depts
-
-# TODO: make a driver class and use this code
-# try:
-#     f = open(sys.argv[len(sys.argv) - 1])
-# except FileNotFoundError:
-#     print("Give a valid path!")
-# finally:
-#     f.close()
-
-# text = dars_parser.convert_pdf_text(sys.argv[len(sys.argv) - 1])
-# courses = dars_parser.get_courses_from_text(text)
-# courses_num_grade_hours = dars_parser.get_courses_num_grade_and_hours(courses)
-
-# # filter result before returning it
-# courses = filter_classes(courses_num_grade_hours)
-# dept_set = get_dept_set(courses_num_grade_hours)
-# courses = put_into_courses(courses)
-
-# print(dept_set)
-# print(*courses, sep = '\n')
