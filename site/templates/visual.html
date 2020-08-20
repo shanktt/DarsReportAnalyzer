@@ -1,141 +1,208 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1 class="center" style="color: aquamarine;">HEY AMEYA YOU SEXY BEAST</h1>
+
+
+
 <script>
-    
+
     window.onload = function() {
 
-        var data = {{ graph_list | safe }};
-    
-        console.log(data)
-    
-    
-        //d3 starts here
-        width = 500;
-            height = 200
-            margin = ({top: 30, right: 0, bottom: 30, left: 40})
-    
-            x = d3.scaleBand()
-        .domain(d3.range(data.length))
-        .range([margin.left, width - margin.right])
-        .padding(0.1)
-    
-    
-    
+
+        // jinja code w/ safe filter: graph_list (python obj.) -> data (js var.)
+        var data = {{ graph_list | safe }}
+
+
+
+        // defining useful constants (make these const?) -------------------------------------
+        width = 500 // of svg
+        height = 200 // of svg
+        margin = ({top: 30, right: 0, bottom: 30, left: 40}) // of svg
+        var graph_lr_shift = 25 // used to shift the graph left and right
+        var transition_time = 300 // time for fade transitions on bar mouseover
+        var titlefont = "Times" // font of graph titles
+        var yaxisfont = "" // font of y-axis labels ... how to apply this?
+        var xaxisfont = "Times" // font of x-axis labels
+
+
+
+        // defining useful scale functions -------------------------------------
+
+        // x-scale function
+        x = d3.scaleBand()
+            .domain(d3.range(data.length))
+            .range([margin.left, width - margin.right])
+            .padding(0.1)
+
+        // y-scale function (for chart bars)
         y = d3.scaleLinear()
-        .domain([0, 100]).nice()
-        .range([height - margin.bottom, margin.top]);
-    
-    
+            .domain([0, 100]).nice()
+            .range([height - margin.bottom, margin.top]);
+
+        // y-scale function (for each chart)
         yy = d3.scaleLinear()
-        .domain([0,data.length]).nice()
-        .range([0, height * data.length]);
-    
-        yaxisscale = d3.scaleLinear()
-                        .domain([0, 100])
-                        .range([170, 30]);
-    
+            .domain([0,data.length]).nice()
+            .range([0, height * (data.length + 2)])
+
+        // x-axis function
         xaxisscale = d3.scaleBand()
-                        .range([0, data[0].group_names.length * (x.bandwidth() / 1.5 + 46)])
-                        .domain(data[0].group_names)
-    
-    
-    
+            .range([0, data[0].group_names.length * 44.14])
+            .domain(data[0].group_names)
+
+        // color function (for chart bars)
         color = d3.scaleOrdinal()
-        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-    
-    
-    
-        // meat of the code
+            .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+
+
+        // meat of the d3 code --------------------------------------------------------------------------
+
+
+        // creating the svg, where all of the visuals will be placed
         const svg = d3.select("#dataviz")
-          .attr("viewBox", [0, 0, width, height * data.length]);
-    
-      svg.selectAll("g")
-        .data(data)
-        .join("g")
-            .attr("transform", (d, i) => `translate(0,${yy(i)})`)
-            .attr("class", "graph")
-    
-        .selectAll("rect")
-            .data(function(d) { return d.group_percentages; })
-            .join("rect")
-            .attr("class", "bar")
-            .attr("x", (d, i) => x(i))
-            .attr("y", d => d === 0 ? 165 : y(d))
-            .attr("height", d => d === 0 ? 5 : (y(0) - y(d)))
-            .attr("width", x.bandwidth() / 1.5)
-            .attr("fill", (d,i) => color(i));
-    
-    
-            // adding titles
-            svg.selectAll("g")
-                .data(data)
-                .append("text")
-                    .text(d => d.name)
-                    .attr("transform",`translate(${width / 2}, 20)`)
-                    .attr("class", "minor")
-                    .style("font-size", "10px")
-                    .style("text-anchor", "middle");
-    
-    
-            //y axis
-            svg.selectAll(".graph")
-                .append("g")
-                .attr("transform", "translate(30,0)")
-                .call(d3.axisLeft(yaxisscale));
-    
-            //x axis
-            svg.selectAll(".graph")
-                .append("g")
-                .attr("transform", "translate(40,-20)")
-                .call(d3.axisBottom(xaxisscale))
-    
-    
-    
-    
-          return svg.node();
-    
-        }
+            .attr("viewBox", [0, 0, width, height * (data.length + 2)])
+
+
+        // creating chart bars
+        svg.selectAll("g")
+            .data(data)
+            .join("g")
+                .attr("transform", (d, i) => `translate(${graph_lr_shift},${yy(i)})`)
+                .attr("class", "graph")
+            .selectAll("rect")
+                .data(function(d) { return d.group_percentages; })
+                .join("rect")
+                .attr("class", "bar")
+                .attr("x", (d, i) => x(i))
+                .attr("y", d => d === 0 ? 165 : y(d))
+                .attr("height", d => d === 0 ? 5 : (y(0) - y(d)))
+                .attr("width", x.bandwidth() / 1.5)
+                .attr("fill", (d,i) => color(i))
+                .style("z-index", 10)
+
+                // hover-over fade transitions for chart bars
+                .on('mouseover', function (d, i) {
+                d3.select(this).transition()
+                    .duration(transition_time)
+                    .attr('opacity', '.5');
+                })
+                .on('mouseout', function (d, i) {
+                    d3.select(this).transition()
+                    .duration(transition_time)
+                    .attr('opacity', 1)
+                })
+
+
+        // text labels --------------------------------------------------------------------------
+
+
+        // bar percentage labels
+        svg.selectAll(".graph")
+            .data(data)
+            .selectAll(".percents")
+                .data(function(d) {return d.group_percentages})
+                .join("text")
+                .attr("x", (d, i) => x(i))
+                .attr("y", d => d === 0 ? y(d) : y(d) + 10)
+                .attr("fill", "white")
+                .text(d => d + "%")
+                .attr("font-size", "7px")
+                .attr("text-anchor", "middle")
+                .attr("transform", `translate(${x.bandwidth() / 3})`)
+
+
+        //x axis labels
+        svg.selectAll(".graph")
+            .data(data)
+            .selectAll(".xlabels")
+            .data(function(d) {return d.group_names})
+            .join("g")
+            .append("text")
+                .text(d => d === "Required Courses" ? "Req. Courses" : d)
+                .attr("font-size", "8px")
+                .attr("font-family", xaxisfont)
+                .attr("transform", (d,i) => d === "Required Courses" ?
+                                `translate(${x(i) - 15},210)rotate(-45)`:
+                                `translate(${x(i) - 5},205)rotate(-45)`)
+
+
+        // graph titles
+        svg.selectAll(".graph")
+            .data(data)
+            .append("text")
+                .text(d => d.name)
+                .attr("transform",`translate(${(width / 2) - (graph_lr_shift)}, 20)`)
+                .attr("class", "minor")
+                .style("font-size", "10px")
+                .style("text-anchor", "middle")
+                .style("font-family", titlefont)
+                .transition(d3.transition().duration(1000).ease(d3.easeLinear))
+
+
+
+        // x- and y- axes --------------------------------------------------------------------------
+
+        var xaxisleft = 43
+        var xaxisylevel = 175
+
+        //x axis line
+        svg.selectAll(".graph")
+            .data(data)
+            .append("line")
+            .style("stroke", "black")
+            .attr("x1", xaxisleft)
+            .attr("y1", xaxisylevel)
+            .attr("x2", d => xaxisleft + x(d.group_names.length - 1))
+            .attr("y2", xaxisylevel)
+
+        //y axis
+        svg.selectAll(".graph")
+            .append("g")
+            .attr("transform", "translate(35,0)")
+            .call(d3.axisLeft(y).tickFormat(d => d + "%"));
+
+
+        // container for each graph --------------------------------------------------------------------------
+
+        // container bg
+        svg.selectAll(".graph")
+            .append("rect")
+            .attr("x", -10)
+            .attr("y", 5)
+            .attr("height", height + 10)
+            .attr("width", width - 50)
+            .style("fill", "none")
+            .style("stroke", "black")
+            .style("z-index", 100)
+
+
+        // container border
+        svg.selectAll(".graph")
+            .append("rect")
+            .attr("class", "lowerrect")
+            .attr("x", -10)
+            .attr("y", 5)
+            .attr("height", height + 10)
+            .attr("width", width - 50)
+            .style("fill", "white")
+            .style("stroke", "none")
+            .lower()
+
+
+        // little intro message --------------------------------------------------------------------------
+        d3.select("#intro")
+            .append("text")
+            .text(`Based on your DARS data, you have ${data.length} relevant minors.`)
+
+
+        return svg.node();
+
+    }
 
 </script>
 
-
-<div id="dataviz"></div>
-
-
-{% if completion_list %}
-    {% for minor in completion_list %}
-        <h2>{{ minor[0] }}</h2>
-        {% for group in minor[1] %}
-            <div class="container-fluid">
-                <div class="row">
-                    <h3>{{ group[0] }}:</h3>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        {% if group[1][0] == 'C' %}
-                        <h5>By Courses</h5>
-                        {% elif group[1][0] == 'H' %}
-                            <h5>By Credit Hours</h5>
-                        {% else %}
-                            <h5>By Required Courses</h5>
-                        {% endif %}
-                    </div>
-                    <div class="col-3">
-                        <h5>Group Progress: {{ group[1][1] }}%</h5>
-                    </div>
-                    <div class="col-6">
-                        <h5>Courses Fulfilling Requirement: {{ group[1][2] }}</h5>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-        
-        {% if not loop.last %}
-            <hr>
-        {% endif %}
-    {% endfor %}
-    
-{% endif %}
+<div>
+    <h1 id="intro"></h1>
+    <svg id="dataviz"></svg>
+</div>
 
 {% endblock content %}
