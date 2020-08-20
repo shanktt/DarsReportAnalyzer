@@ -59,9 +59,6 @@ def analyze_dars():
     # put all the courses in the form: (department + ' ' + course number, credit hours earned)
     courses = dars_filter.put_into_courses(courses=courses)
 
-    # remove the dars reports from the directory once all needed information is gathered
-    # os.remove(path=path)
-
     # return all the departments in DARS report/all courses taken
     # by the student
     return dept_set, courses
@@ -137,20 +134,31 @@ def get_graph_list():
     completion_list = get_completion_list()
     graph_list = []
 
+    if completion_list is None:
+        return None
+
     for minor in completion_list:
         name = minor[0]
         group_names = []
         group_percentages = []
         for c in minor[1]:
             group_name = c[0]
-            # print(group_name)
             percentage = c[1][1]
-            # print(percentage)
+            
             group_names.append(group_name)
             group_percentages.append(percentage)
         
         progress = minor_progress_struct(name_=name, group_names_=group_names, group_percentages_=group_percentages)
         graph_list.append(progress)
+
+
+    # After all necessary information is taken from the DARS Report
+    # Delete the File from the Upload Folder
+    folder = os.listdir(UPLOAD_FOLDER)
+    name = folder[0]
+    path = UPLOAD_FOLDER + '/' + name
+
+    os.remove(path=path)
 
     return graph_list
 

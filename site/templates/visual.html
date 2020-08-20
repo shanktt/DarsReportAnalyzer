@@ -9,7 +9,7 @@
 
 
         // jinja code w/ safe filter: graph_list (python obj.) -> data (js var.)
-        var data = {{ graph_list | safe }}
+        var data = {{ graph_list | safe }};
 
 
 
@@ -105,7 +105,7 @@
                 .attr("y", d => d === 0 ? y(d) : y(d) + 10)
                 .attr("fill", "white")
                 .text(d => d + "%")
-                .attr("font-size", "7px")
+                .attr("font-size", "5px")
                 .attr("text-anchor", "middle")
                 .attr("transform", `translate(${x.bandwidth() / 3})`)
 
@@ -119,7 +119,7 @@
             .append("text")
                 .text(d => d === "Required Courses" ? "Req. Courses" : d)
                 .attr("font-size", "8px")
-                .attr("font-family", xaxisfont)
+                .attr("font-family", "Poppins")
                 .attr("transform", (d,i) => d === "Required Courses" ?
                                 `translate(${x(i) - 15},210)rotate(-45)`:
                                 `translate(${x(i) - 5},205)rotate(-45)`)
@@ -134,7 +134,7 @@
                 .attr("class", "minor")
                 .style("font-size", "10px")
                 .style("text-anchor", "middle")
-                .style("font-family", titlefont)
+                .style("font-family", "Poppins")
                 .transition(d3.transition().duration(1000).ease(d3.easeLinear))
 
 
@@ -147,8 +147,6 @@
         //x axis line
         svg.selectAll(".graph")
             .data(data)
-            .append("line")
-            .style("stroke", "black")
             .attr("x1", xaxisleft)
             .attr("y1", xaxisylevel)
             .attr("x2", d => xaxisleft + x(d.group_names.length - 1))
@@ -157,41 +155,53 @@
         //y axis
         svg.selectAll(".graph")
             .append("g")
+            .attr("class", "yaxis")
             .attr("transform", "translate(35,0)")
-            .call(d3.axisLeft(y).tickFormat(d => d + "%"));
+            .call(d3.axisLeft(y)
+                        .tickFormat(d => d + "%")
+                        .ticks(5)
+                        .tickValues([0, 25, 50, 75, 100]));
+
+        // y axis styling
+        svg.selectAll(".yaxis")
+                .select(".domain")
+                .attr("stroke", "blue")
+                .attr("opacity", "0.0");
+
+            
 
 
         // container for each graph --------------------------------------------------------------------------
 
         // container bg
-        svg.selectAll(".graph")
-            .append("rect")
-            .attr("x", -10)
-            .attr("y", 5)
-            .attr("height", height + 10)
-            .attr("width", width - 50)
-            .style("fill", "none")
-            .style("stroke", "black")
-            .style("z-index", 100)
+        //svg.selectAll(".graph")
+            //.append("rect")
+            //.attr("x", -10)
+            //.attr("y", 5)
+            //.attr("height", height + 10)
+            //.attr("width", width - 50)
+            //.style("fill", "none")
+            //.style("stroke", "black")
+            //.style("z-index", 100)
 
 
         // container border
-        svg.selectAll(".graph")
-            .append("rect")
-            .attr("class", "lowerrect")
-            .attr("x", -10)
-            .attr("y", 5)
-            .attr("height", height + 10)
-            .attr("width", width - 50)
-            .style("fill", "white")
-            .style("stroke", "none")
-            .lower()
+        //svg.selectAll(".graph")
+            //.append("rect")
+            //.attr("class", "lowerrect")
+            //.attr("x", -10)
+            //.attr("y", 5)
+            //.attr("height", height + 10)
+            //.attr("width", width - 50)
+            //.style("fill", "white")
+            //.style("stroke", "none")
+            //.lower()
 
 
         // little intro message --------------------------------------------------------------------------
         d3.select("#intro")
             .append("text")
-            .text(`Based on your DARS data, you have ${data.length} relevant minors.`)
+            .text(`Based on your DARS data, you have ${data.length} relevant minors`)
 
 
         return svg.node();
@@ -201,7 +211,7 @@
 </script>
 
 <div>
-    <h1 id="intro"></h1>
+    <h1 id="intro" class="center"></h1>
     <svg id="dataviz"></svg>
 </div>
 

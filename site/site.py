@@ -26,7 +26,7 @@ def home():
     if request.method == "POST":
 
         # TODO: ENSURE THAT ALL FILES ARE REMOVED BEFORE HAND
-        
+
         # Error handling to ensure that a pdf is one the files
         # gotten via the POST request 
         if 'pdf' not in request.files:
@@ -62,12 +62,12 @@ def home():
             # analyzed for visualization
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            if check_if_dars_report(app.config['UPLOAD_FOLDER'] + '/' + filename):
-                flash('File Uploaded Successfully', category='success')
-                return redirect(url_for('visualization'))
-            else:
-                flash('Not a Valid DARS Report', category='danger')
-                return render_template('home.html', title='Home')
+            # if check_if_dars_report(app.config['UPLOAD_FOLDER'] + '/' + filename):
+            flash('File Uploaded Successfully', category='success')
+            return redirect(url_for('visualization'))
+            # else:
+            #     flash('Not a Valid DARS Report', category='danger')
+            #     return render_template('home.html', title='Home')
             
             # go to the page for d3.js visualization after waiting 0.5 seconds
             # time.sleep(0.5)
@@ -92,6 +92,8 @@ def about():
 def visualization():
     # TODO: Check if Folder is empty
     # if so redirect back to homepage
+    if len(UPLOAD_FOLDER) == 0:
+        return redirect(url_for('home'))
 
     # TODO: redirect back to homepage
 
@@ -101,15 +103,12 @@ def visualization():
     completion_list = get_completion_list()
     graph_list = get_graph_list()
 
-    graph_list = [o.dump() for o in graph_list]
-
-    print(graph_list)
-
-    if completion_list == None:
+    if completion_list is None or graph_list is None:
         # TODO: Make this look better
         flash('Cannot Display Visualization', category='danger')
         return redirect(url_for('home'))
     else:
+        graph_list = [o.dump() for o in graph_list]
         return render_template('visual.html', title='Visualization', 
                                                 graph_list=graph_list)
         
@@ -124,11 +123,11 @@ def check_file(filename):
     else:
         return None
 
-def check_if_dars_report(path):
-    s = convert_pdf_text(path)
-    if 'SUMMARY OF COURSES TAKEN' not in s:
-        return False
-    return True
+# def check_if_dars_report(path):
+#     s = convert_pdf_text(path)
+#     if ('SUMMARY OF COURSES TAKEN' and 'YOU MUST COMPLETE') not in s:
+#         return False
+#     return True
 
 
 if __name__ == '__main__':
