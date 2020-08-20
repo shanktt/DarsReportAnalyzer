@@ -1,5 +1,8 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
-from driver import get_completion_list
+from sys import path
+path.append('/Users/ameyagharpure/DarsReportAnalyzer')
+from dars_parser import convert_pdf_text
+from driver import get_completion_list, get_graph_list
 import os
 from werkzeug.utils import secure_filename
 import time
@@ -58,11 +61,17 @@ def home():
             # save the file to directory so that it can be 
             # analyzed for visualization
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            flash('File Uploaded Successfully', category='success')
+
+            if check_if_dars_report(app.config['UPLOAD_FOLDER'] + '/' + filename):
+                flash('File Uploaded Successfully', category='success')
+                return redirect(url_for('visualization'))
+            else:
+                flash('Not a Valid DARS Report', category='danger')
+                return render_template('home.html', title='Home')
             
             # go to the page for d3.js visualization after waiting 0.5 seconds
             # time.sleep(0.5)
-            return redirect(url_for('visualization'))
+            # return redirect(url_for('visualization'))
 
     return render_template('home.html', title='Home')
     
@@ -90,13 +99,19 @@ def visualization():
     # mayb display an error message??? cuz it should never get here without a file
     # within the directory
     completion_list = get_completion_list()
+    graph_list = get_graph_list()
+
+    graph_list = [o.dump() for o in graph_list]
+
+    print(graph_list)
 
     if completion_list == None:
         # TODO: Make this look better
         flash('Cannot Display Visualization', category='danger')
         return redirect(url_for('home'))
     else:
-        return render_template('visual.html', title='Visualization', completion_list=completion_list)
+        return render_template('visual.html', title='Visualization', 
+                                                graph_list=graph_list)
         
 
 ####################################### HELPER METHODS #######################################
@@ -108,6 +123,12 @@ def check_file(filename):
         return '.' in filename and extension_allowed
     else:
         return None
+
+def check_if_dars_report(path):
+    s = convert_pdf_text(path)
+    if 'SUMMARY OF COURSES TAKEN' not in s:
+        return False
+    return True
 
 
 if __name__ == '__main__':

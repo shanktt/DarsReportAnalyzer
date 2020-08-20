@@ -10,7 +10,26 @@ import os
 UPLOAD_FOLDER = '/Users/ameyagharpure/DarsReportAnalyzer/site/static/pdf_upload'
 MINOR_DATA = '/Users/ameyagharpure/DarsReportAnalyzer/minor_data/minor_data.csv'
 
-# TODO: ensure that after the visualization or list of necessary info is obtained that file is deleted from the system
+
+
+# Struct to make data easier to visualize for d3.js
+class minor_progress_struct():
+    def __init__(self, name_ : str, group_names_ : list, group_percentages_ : list):
+        self.name = name_
+        self.group_names = group_names_
+        self.group_percentages = group_percentages_
+
+    def __str__(self):
+        return (f'{self.name}, {self.group_names}, {self.group_percentages}')
+
+    def __repr__(self):
+        return (f'{self.name}, {self.group_names}, {self.group_percentages}')
+
+    def dump(self):
+        return {'name' : self.name,
+                'group_names' : self.group_names,
+                'group_percentages' : self.group_percentages}
+
 
 def analyze_dars():
     folder = os.listdir(UPLOAD_FOLDER)
@@ -41,7 +60,7 @@ def analyze_dars():
     courses = dars_filter.put_into_courses(courses=courses)
 
     # remove the dars reports from the directory once all needed information is gathered
-    os.remove(path=path)
+    # os.remove(path=path)
 
     # return all the departments in DARS report/all courses taken
     # by the student
@@ -98,7 +117,6 @@ def create_completion_list(intersection=1):
 
 def get_completion_list(intersection=1):
     completion_list = create_completion_list()
-    # print(*completion_list, sep='\n')
     
     # in case that visualization cannot be displayed
     if len(completion_list) == 0:
@@ -115,10 +133,37 @@ def get_completion_list(intersection=1):
     
     return final_completion_list
 
+def get_graph_list():
+    completion_list = get_completion_list()
+    graph_list = []
+
+    for minor in completion_list:
+        name = minor[0]
+        group_names = []
+        group_percentages = []
+        for c in minor[1]:
+            group_name = c[0]
+            # print(group_name)
+            percentage = c[1][1]
+            # print(percentage)
+            group_names.append(group_name)
+            group_percentages.append(percentage)
+        
+        progress = minor_progress_struct(name_=name, group_names_=group_names, group_percentages_=group_percentages)
+        graph_list.append(progress)
+
+    return graph_list
+
+
 if __name__ == '__main__':
     # print(analyze_dars())
     # print(analyze_minors())
     # print(*get_completion_list(), sep='\n')
-    for i in range(1):
-        List = get_completion_list()
-        print(id(List), List[2])
+    l = get_graph_list()
+    l = [o.dump() for o in l]
+    print(*l, sep='\n')
+    # print(get_graph_list())
+    # for i in range(1):
+    #     List = get_completion_list()
+    #     # stuff = get_minor_and_groups(List)
+    #     print(*stuff, sep='\n')
