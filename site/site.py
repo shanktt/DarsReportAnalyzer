@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request
 from sys import path
 path.append('/Users/ameyagharpure/DarsReportAnalyzer')
 from dars_parser import convert_pdf_text
-from driver import get_completion_list, get_graph_list
+from driver import get_graph_list
 import os
 from werkzeug.utils import secure_filename
 import time
@@ -100,16 +100,14 @@ def visualization():
     # if no pdf is in the folder redirect to the home page
     # mayb display an error message??? cuz it should never get here without a file
     # within the directory
-    completion_list = get_completion_list()
     graph_list = get_graph_list()
 
-    if completion_list is None or graph_list is None:
+    if graph_list is None:
         # TODO: Make this look better
         flash('Cannot Display Visualization', category='danger')
         return redirect(url_for('home'))
     else:
-        graph_list = [o.dump() for o in graph_list]
-        return render_template('visual.html', title='Visualization', 
+        return render_template('graph.html', title='Visualization', 
                                                 graph_list=graph_list)
         
 

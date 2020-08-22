@@ -1,4 +1,5 @@
 from group import group
+import itertools
 
 class minor:
     def __init__(self, name_ : str, required_courses_ : list, required_groups_ : list, total_credits_ : int, repl_courses_ : list, dept_set_ : set):
@@ -23,6 +24,17 @@ class minor:
     
     def get_courses(self):
         return [c[0] for c in self.required_courses]
+
+    def get_repl_courses_flattened(self):
+        repl_courses = []
+        for i in self.repl_courses:
+            repl_courses.append(list(i)[1:])
+
+        # flatten the list
+        repl_courses = list(itertools.chain(*repl_courses))
+        return repl_courses
+
+
 
     # def dump(self):
     #     return {'minor': {'name': self.name,

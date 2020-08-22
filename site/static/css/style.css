@@ -18,7 +18,7 @@ html, body{
 }
 
 body {
-    background: linear-gradient(to bottom right, pink, #9370DB);
+    /* background: linear-gradient(to bottom right, pink, #9370DB); */
 }
 
 .ml-auto .dropdown-menu {

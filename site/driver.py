@@ -14,21 +14,23 @@ MINOR_DATA = '/Users/ameyagharpure/DarsReportAnalyzer/minor_data/minor_data.csv'
 
 # Struct to make data easier to visualize for d3.js
 class minor_progress_struct():
-    def __init__(self, name_ : str, group_names_ : list, group_percentages_ : list):
+    def __init__(self, name_ : str, group_names_ : list, group_percentages_ : list, groups_info_ : list):
         self.name = name_
         self.group_names = group_names_
         self.group_percentages = group_percentages_
+        self.groups_info = groups_info_
 
     def __str__(self):
-        return (f'{self.name}, {self.group_names}, {self.group_percentages}')
+        return (f'{self.name}, {self.group_names}, {self.group_percentages}, {self.groups_info}')
 
     def __repr__(self):
-        return (f'{self.name}, {self.group_names}, {self.group_percentages}')
+        return (f'{self.name}, {self.group_names}, {self.group_percentages}, {self.groups_info}')
 
     def dump(self):
         return {'name' : self.name,
                 'group_names' : self.group_names,
-                'group_percentages' : self.group_percentages}
+                'group_percentages' : self.group_percentages, 
+                'groups_info' : self.groups_info}
 
 
 def analyze_dars():
@@ -72,93 +74,67 @@ def analyze_minors():
     # return list of all minors
     return minors
 
-# creates a list of tuples with each tuple formatted (Minor name, List of tuples with completion for each group)
-# the inner list of tuples will be formatted (Group Number, (Group type, Percentage Completed, Courses Counted Towards Group))
-def create_completion_list(intersection=1):
+def get_graph_list(intersection=1):
     dept_set, courses = analyze_dars()
 
-    if dept_set == None and courses == None:
+    if dept_set is None and courses is None:
         return []
 
     minors = analyze_minors()
-
-    completion_list = []
+    graph_list = []
     for minor in minors:
-        # if the length of the intersection of the set of departments in the minor/the student's DARS report is less than
-        # the intersection length parameter skip progress checking for that minor
+        # if there is no intersection between the depts in the DARS Report
+        # and the minors skip checking progress for the minor
         if len(minor.dept_set.intersection(dept_set)) < intersection:
             continue
-        minor_completion = []
-        # iterate through the groups for the minor
-        for i, group in enumerate(minor.required_groups, start=1):
-            progress = []
-            copy_courses = courses.copy()
-            if group.goal_type == 'H':
-                progress = check_H_type_group(group, get_unique_courses_in_group(minor, group), copy_courses)
-            else:
-                progress = check_C_type_group(group, get_unique_courses_in_group(minor, group), copy_courses)
-            minor_completion.append((f'Group {i}', tuple(progress)))
-        
-        # only check progress for the required courses if there are any required_courses for minor
-        if len(minor.required_courses) != 0:
-            copy_courses = courses.copy()
-            progress = check_required_courses(minor, copy_courses)
-            minor_completion.append(('Required Courses', progress))
-        
-        # append a tuple with in the form with the name of the minor with a
-        # list of lists with the completion progress for each group for the minor
-        tup = (minor.name, minor_completion)
-        completion_list.append(tup)
 
-    return completion_list
-
-def get_completion_list(intersection=1):
-    completion_list = create_completion_list()
-    
-    # in case that visualization cannot be displayed
-    if len(completion_list) == 0:
-        return None
-
-    final_completion_list = []
-    for c in completion_list:
-        all_zero = True
-        for x in c[1]:
-            if x[1][1] > 0:
-                all_zero = False
-        if not all_zero:
-            final_completion_list.append(c)
-    
-    return final_completion_list
-
-def get_graph_list():
-    completion_list = get_completion_list()
-    graph_list = []
-
-    if completion_list is None:
-        return None
-
-    for minor in completion_list:
-        name = minor[0]
+        groups_info = []
         group_names = []
         group_percentages = []
-        for c in minor[1]:
-            group_name = c[0]
-            percentage = c[1][1]
+
+        for i, group in enumerate(minor.required_groups, start=1):
+            copy_courses = courses.copy()
+            if group.goal_type == 'H':
+                group_percentages.append(check_H_type_group(group, get_unique_courses_in_group(minor, group), copy_courses)[1])
+            else:
+                group_percentages.append(check_C_type_group(group, get_unique_courses_in_group(minor, group), copy_courses)[1])
+            group_names.append((f'Group{i}'))
+
+            total = group.get_courses() + group.get_repl_courses_flattened()
+            groups_info.append(total if len(total) <= 5 else total[:5])
+
+        if len(minor.required_courses) != 0:
+            copy_courses = courses.copy()
+            group_percentages.append(check_required_courses(minor, copy_courses)[1])
+            group_names.append('Required Courses')
             
-            group_names.append(group_name)
-            group_percentages.append(percentage)
-        
-        progress = minor_progress_struct(name_=name, group_names_=group_names, group_percentages_=group_percentages)
+            total = minor.get_courses() + minor.get_repl_courses_flattened()
+            groups_info.append(total if len(total) <= 5 else total[:5])
+
+        progress = minor_progress_struct(name_=minor.name, 
+                                            group_names_=group_names, 
+                                                group_percentages_=group_percentages, 
+                                                    groups_info_=groups_info)
+
         graph_list.append(progress)
 
+    # filter our all minors with 0 progress here
+    i = 0
+    while i < len(graph_list):
+        if all(v == 0 for v in graph_list[i].group_percentages):
+            graph_list.pop(i)
+            continue
+        i += 1
 
     # After all necessary information is taken from the DARS Report
     # Delete the File from the Upload Folder
-    folder = os.listdir(UPLOAD_FOLDER)
-    name = folder[0]
-    path = UPLOAD_FOLDER + '/' + name
+    # folder = os.listdir(UPLOAD_FOLDER)
+    # name = folder[0]
+    # path = UPLOAD_FOLDER + '/' + name
 
-    os.remove(path=path)
+    # os.remove(path=path)
+    
+    graph_list = [o.dump() for o in graph_list]
 
     return graph_list
 
@@ -168,8 +144,10 @@ if __name__ == '__main__':
     # print(analyze_minors())
     # print(*get_completion_list(), sep='\n')
     l = get_graph_list()
-    l = [o.dump() for o in l]
+    # print(len(l))
     print(*l, sep='\n')
+    # l = [o.dump() for o in l]
+    # print(*l, sep='\n')
     # print(get_graph_list())
     # for i in range(1):
     #     List = get_completion_list()

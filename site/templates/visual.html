@@ -19,9 +19,9 @@
         margin = ({top: 30, right: 0, bottom: 30, left: 40}) // of svg
         var graph_lr_shift = 25 // used to shift the graph left and right
         var transition_time = 300 // time for fade transitions on bar mouseover
-        var titlefont = "Times" // font of graph titles
-        var yaxisfont = "" // font of y-axis labels ... how to apply this?
-        var xaxisfont = "Times" // font of x-axis labels
+        var titlefont = "'Poppins', sans-serif" // font of graph titles
+        var yaxisfont = "'Poppins', sans-serif" // font of y-axis labels ... how to apply this?
+        var xaxisfont = "'Poppins', sans-serif" // font of x-axis labels
 
 
 
@@ -134,7 +134,7 @@
                 .attr("class", "minor")
                 .style("font-size", "10px")
                 .style("text-anchor", "middle")
-                .style("font-family", "Poppins")
+                .style("font-family", titlefont)
                 .transition(d3.transition().duration(1000).ease(d3.easeLinear))
 
 
@@ -165,7 +165,6 @@
         // y axis styling
         svg.selectAll(".yaxis")
                 .select(".domain")
-                .attr("stroke", "blue")
                 .attr("opacity", "0.0");
 
             
