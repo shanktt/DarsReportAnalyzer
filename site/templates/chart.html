@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<select id="minorSelect">
+    {% if graph_list %}
+        {% for minor in graph_list %}
+            <option value="{{ loop.index }}">{{ minor.name }}</option>
+        {% endfor %}
+    {% endif %}
+</select>
+<canvas id="myChart" width="400" height="400"></canvas>
+<script>
+    window.onload = function(){
+
+        var data = {{ graph_list | safe }}
+
+        var charts = []
+
+        for (var i = 0; i < data.length; i++) {
+            charts.push({
+                type: 'bar',
+                data: {
+                    labels: data[i].group_names,
+                    datasets: [{
+                        label: '% Completed',
+                        data: data[i].group_percentages,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: data[i].name
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                    }]
+                    }
+                }
+            });
+        }
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, charts[0]);
+
+        var currentChart;
+
+
+
+        $('#minorSelect').change(function() {
+
+            if(currentChart) { currentChart.destroy(); }
+
+            var index = $("#minorSelect").val();
+
+            currentChart = new Chart(ctx, charts[index - 1]);
+        })
+    }
+
+</script>
+
+
+{% endblock content %}
