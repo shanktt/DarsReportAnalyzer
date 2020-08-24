@@ -1,3 +1,5 @@
+import itertools
+
 class group:
     def __init__(self, goal_type_ : str, num_credits_or_num_courses : int, courses_ : list, repl_courses_ : list):
         self.goal_type = goal_type_
@@ -21,3 +23,12 @@ class group:
     # Converts the list of tuples into a dictionary where the first element in the tuple is the key the and rest of the elements in the tuple are the value (in the form of a list of strings)
     def convert_repl_courses_into_dict(self):
         return dict([(repl_tuple[0], list(repl_tuple[1:])) for repl_tuple in self.repl_courses])
+
+    def get_repl_courses_flattened(self):
+        repl_courses = []
+        for i in self.repl_courses:
+            repl_courses.append(list(i)[1:])
+
+        # flatten the list
+        repl_courses = list(itertools.chain(*repl_courses))
+        return repl_courses

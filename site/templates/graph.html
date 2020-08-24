@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<select id="minorSelect">
+    {% if graph_list %}
+        {% for minor in graph_list %}
+            <option value="{{ loop.index }}">{{ minor.name }}</option>
+        {% endfor %}
+    {% endif %}
+</select>
+<div>
+    {% if graph_list %}
+        {% for minor in graph_list %}
+            <ul class="legend" id="{{ loop.index }}" style="float: right; display: none;">
+                {% for g in minor.groups_info %}
+                    <li class="legenditems" style="list-style-type: square !important;">{{ minor.group_names[loop.index - 1] }}: {{ g|join(', ') }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% endif %}
+</div>
+<canvas id="myChart" width="400" height="200"></canvas>
+
+
+
+
+<script>
+    window.onload = function(){
+
+        // get the list of relevant minors
+        var data = {{ graph_list | safe }};
+
+        var charts = []
+        
+        // list of colors for legend
+        var colorlist = ["#98abc5",
+                         "#8a89a6",
+                         "#7b6888",
+                         "#6b486b",
+                         "#a05d56",
+                         "#d0743c",
+                         "#ff8c00"]
+
+        // create a chart object for each minor
+        for (var i = 0; i < data.length; i++) {
+            charts.push({
+                type: 'bar',
+                data: {
+                    labels: data[i].group_names,
+                    datasets: [{
+                        label: '% Completed',
+                        data: data[i].group_percentages,
+                        borderWidth: 0,
+                        backgroundColor: colorlist,
+                        borderColor: colorlist
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: data[i].name
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                min: 0,
+                                max: 100
+                            },
+                            gridLines: {
+                                display: false
+                            }
+                        }],
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        // set current chart as the chart for the first minor
+        var currentChart = new Chart(ctx, charts[0]);
+        
+        // get corresponding legend for the chart
+        var currentList = document.getElementsByClassName('legend')[0];
+        currentList.style.display = 'inline';
+
+        // set the colors of the legend to match corresponding bar
+        var currentItems = currentList.getElementsByTagName('li');
+        for (var i = 0; i < currentItems.length; i++) {
+            currentItems[i].style.color = colorlist[i];
+        }
+
+        var currentList = document.getElementsByClassName('legend')[0];
+        currentList.style.display = 'inline';
+        var currentItems = document.getElementsByClassName('legenditems')
+        for (var i = 0; i < currentItems.length; i++) {
+            currentItems[i].style.color = colorlist[0]
+        }
+
+        $('#minorSelect').change(function() {
+
+            if(currentChart) { currentChart.destroy(); }
+
+            var index = $("#minorSelect").val();
+            
+            // update chart to match dropdown
+            currentChart = new Chart(ctx, charts[index - 1]);
+            
+            // hide old legend
+            currentList.style.display = 'none';
+            currentList = document.getElementsByClassName('legend')[index - 1];
+            currentList.style.display = 'inline';
+            
+            // get the new legend/set the colors of the legend to match corresponding bar
+            currentItems = currentList.getElementsByTagName('li');
+            for(var i = 0; i < currentItems.length; i++){
+                currentItems[i].style.color = colorlist[i];
+            }
+        })
+    }
+</script>
+
+{% endblock content %}

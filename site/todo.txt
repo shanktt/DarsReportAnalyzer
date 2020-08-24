@@ -1,9 +1,0 @@
-- ensure how everything will operate based of size of screen (need to change that stuff)
-- See profile will expand a textbox on the screen with the full info
-- Jumbotron = can change back to fluid if you want it to span the entire page
-- fix success flash
-- fix the issue with multiple flashing
-- Work on d3.js bargraph implemenation
-- Style the titles/labels to look way nicer overall
-- Get the Jumbotron right/finish the about page
-- Valid Checking
