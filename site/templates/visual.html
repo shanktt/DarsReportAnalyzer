@@ -1,17 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
 
-
-
 <script>
-
     window.onload = function() {
-
 
         // jinja code w/ safe filter: graph_list (python obj.) -> data (js var.)
         var data = {{ graph_list | safe }};
-
-
 
         // defining useful constants (make these const?) -------------------------------------
         width = 500 // of svg
@@ -22,7 +16,6 @@
         var titlefont = "'Poppins', sans-serif" // font of graph titles
         var yaxisfont = "'Poppins', sans-serif" // font of y-axis labels ... how to apply this?
         var xaxisfont = "'Poppins', sans-serif" // font of x-axis labels
-
 
 
         // defining useful scale functions -------------------------------------
@@ -51,7 +44,6 @@
         // color function (for chart bars)
         color = d3.scaleOrdinal()
             .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-
 
 
         // meat of the d3 code --------------------------------------------------------------------------
@@ -202,13 +194,9 @@
             .append("text")
             .text(`Based on your DARS data, you have ${data.length} relevant minors`)
 
-
         return svg.node();
-
     }
-
 </script>
-
 <div>
     <h1 id="intro" class="center"></h1>
     <svg id="dataviz"></svg>

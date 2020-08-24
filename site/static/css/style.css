@@ -1,24 +1,10 @@
-/* PUT SOME STYLES FOR THE NAVBAR TO FIT THE WAVE UK WHAT IM SAYING */
-.my-container {
-    border: 1px solid green;
-}
-.my-row {
-    border: 3px solid red;
-    height: 300px;
-    margin-top: auto;
-    margin-bottom: auto;
-}
-.my-col {
-    border: 3px solid blue; 
-    align-content: center;
-}
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&family=Teko&family=Ubuntu&display=swap');
 html, body{
     font-family: 'Poppins', sans-serif;
 }
-
-body {
-    /* background: linear-gradient(to bottom right, pink, #9370DB); */
+footer{
+    background-color: #3f3f3f;
+    padding-top: 2rem;
 }
 
 .ml-auto .dropdown-menu {
@@ -30,7 +16,6 @@ body {
     text-align: center;
 }
 
-/* Navbar styling */
 .navbar {
     padding: .8rem;
 }
@@ -43,11 +28,8 @@ body {
     font-size: 1.1em;
 }
 
-/* jumbotron styling */
 .jumbotron{
     padding: 1rem;
-    /* background: none; */
-    /* width: 75%; */
 }
 
 .padding{
@@ -55,7 +37,6 @@ body {
 }
 
 .break{
-    /* width: 100% !important;  */
     border-top: 2px solid #b4b4b4;
     margin-top: .3rem;
     margin-bottom: 1rem;
@@ -80,29 +61,15 @@ body {
     color:#337ab7
 }
 
-.heh{
-    color: white;
-    outline-color: white;
-}
-
 .xlabels{
     font-family: 'Poppins', sans-serif;
 }
 
-footer{
-    background-color: #3f3f3f;
-    /* width: 100%; */
-    padding-top: 2rem;
+.btn-outline-secondary{
+    background-color: #6648b1;
+    color: white;
 }
 
 .social-text{
     color: white;
 }
-
-
-/* style the flashed messages here later */
-/* .flash{
-
-} */
-
-/* Make NAVBar items larger/better spaced out */

@@ -56,12 +56,6 @@ def create_minors(df):
                         group_courses.append((course.strip(), False))
                         # get the course dept/add it to the set of course depts
                         depts.add(course.strip().split(' ')[0])
-                
-                # # List to represent courses that are not allowed for a group
-                # unallowed_courses_group = []
-                # if not pd.isna(row['Group'+str(n)+' Courses Not Allowed:']):
-                #     unallowed_courses_group = row['Group'+str(n)+' Courses Not Allowed:'].split(',')
-                #     unallowed_courses_group = [s.strip() for s in unallowed_courses_group]
 
                 # Adds a group object to grouplist
                 grouplist.append(group(row['Group'+str(n)+' Type:'], row['Group'+str(n)+' Type Amt:'], group_courses, repl_course_group))
@@ -85,9 +79,3 @@ def parse_repl_courses(course_str, repl_list, dept_set):
 
     # Return first entry in repl_course_list
     return repl_course_list[0]
-
-# df = create_pd('minor_data/minor_data.csv') 
-# # create_minors(df)
-# minors = create_minors(df)
-# for i, m in enumerate(minors):
-#     print(i, m.dept_set)

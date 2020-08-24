@@ -10,9 +10,7 @@ import os
 UPLOAD_FOLDER = '/Users/ameyagharpure/DarsReportAnalyzer/site/static/pdf_upload'
 MINOR_DATA = '/Users/ameyagharpure/DarsReportAnalyzer/minor_data/minor_data.csv'
 
-
-
-# Struct to make data easier to visualize for d3.js
+# Struct to make data easier to visualize for Chart.js
 class minor_progress_struct():
     def __init__(self, name_ : str, group_names_ : list, group_percentages_ : list, groups_info_ : list):
         self.name = name_
@@ -74,6 +72,7 @@ def analyze_minors():
     # return list of all minors
     return minors
 
+# get a list of minor_progress_structs for the given DARS Report
 def get_graph_list(intersection=1):
     dept_set, courses = analyze_dars()
 
@@ -94,15 +93,19 @@ def get_graph_list(intersection=1):
 
         for i, group in enumerate(minor.required_groups, start=1):
             copy_courses = courses.copy()
+            # get progress for H type group
             if group.goal_type == 'H':
                 group_percentages.append(check_H_type_group(group, get_unique_courses_in_group(minor, group), copy_courses)[1])
+            # get progress for C type group
             else:
                 group_percentages.append(check_C_type_group(group, get_unique_courses_in_group(minor, group), copy_courses)[1])
-            group_names.append((f'Group{i}'))
+            group_names.append((f'Group {i}'))
 
+            # get list of courses that fulfil the group
             total = group.get_courses() + group.get_repl_courses_flattened()
             groups_info.append(total if len(total) <= 5 else total[:5])
 
+        # check progress for the required courses for the minor
         if len(minor.required_courses) != 0:
             copy_courses = courses.copy()
             group_percentages.append(check_required_courses(minor, copy_courses)[1])
@@ -128,28 +131,12 @@ def get_graph_list(intersection=1):
 
     # After all necessary information is taken from the DARS Report
     # Delete the File from the Upload Folder
-    # folder = os.listdir(UPLOAD_FOLDER)
-    # name = folder[0]
-    # path = UPLOAD_FOLDER + '/' + name
+    folder = os.listdir(UPLOAD_FOLDER)
+    name = folder[0]
+    path = UPLOAD_FOLDER + '/' + name
 
-    # os.remove(path=path)
+    os.remove(path=path)
     
     graph_list = [o.dump() for o in graph_list]
 
     return graph_list
-
-
-if __name__ == '__main__':
-    # print(analyze_dars())
-    # print(analyze_minors())
-    # print(*get_completion_list(), sep='\n')
-    l = get_graph_list()
-    # print(len(l))
-    print(*l, sep='\n')
-    # l = [o.dump() for o in l]
-    # print(*l, sep='\n')
-    # print(get_graph_list())
-    # for i in range(1):
-    #     List = get_completion_list()
-    #     # stuff = get_minor_and_groups(List)
-    #     print(*stuff, sep='\n')

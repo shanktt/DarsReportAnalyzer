@@ -33,11 +33,3 @@ class minor:
         # flatten the list
         repl_courses = list(itertools.chain(*repl_courses))
         return repl_courses
-
-
-
-    # def dump(self):
-    #     return {'minor': {'name': self.name,
-    #                       'required_courses' : [o.dump() for o in self.required_courses],
-    #                       'required_groups' : [o.dump() for o in self.required_groups],
-    #                       'total_credits' : self.total_credits}}
