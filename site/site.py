@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from sys import path
-path.append('/Users/ameyagharpure/DarsReportAnalyzer')
+path.append('/Users/alexander/Desktop/DarsReportAnalyzer')
 from dars_parser import convert_pdf_text
 from driver import get_graph_list
 import os
@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 import time
 
 ALLOWED_EXTENSIONS = {'pdf'}
-UPLOAD_FOLDER = '/Users/ameyagharpure/DarsReportAnalyzer/site/static/pdf_upload'
+UPLOAD_FOLDER = '/Users/alexander/Desktop/DarsReportAnalyzer/site/static/pdf_upload'
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '7cb92ea70a44597ac5f029e5febc4aea'
@@ -34,14 +34,14 @@ def home():
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], f))
 
         # Error handling to ensure that a pdf is one the files
-        # gotten via the POST request 
+        # gotten via the POST request
         if 'pdf' not in request.files:
             flash('No PDF Received', category='danger')
             return redirect(request.url)
-        
+
         # get the file from the POST request
         file = request.files['pdf']
-        
+
         # Check to make sure that data is passed to the app
         # if not flash error message
         if check_file(file.filename) is None:
@@ -58,12 +58,12 @@ def home():
         if file.filename == '':
             flash('No File Selected', category='danger')
             return redirect(request.url)
-        
+
         # TODO: Add another check to ensure its a valid DARS Report
 
         if file and check_file(file.filename):
             filename = secure_filename(file.filename)
-            # save the file to directory so that it can be 
+            # save the file to directory so that it can be
             # analyzed for visualization
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
@@ -72,7 +72,7 @@ def home():
             return redirect(url_for('visualization'))
         
     return render_template('home.html', title='Home')
-    
+
 
 # route for the about page
 @app.route('/about')
@@ -91,9 +91,9 @@ def visualization():
         flash('Cannot Display Visualization', category='danger')
         return redirect(url_for('home'))
     else:
-        return render_template('graph.html', title='Visualization', 
+        return render_template('graph.html', title='Visualization',
                                                 graph_list=graph_list)
-        
+
 
 ####################################### HELPER METHODS #######################################
 

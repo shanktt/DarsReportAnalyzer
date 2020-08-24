@@ -1,5 +1,5 @@
 from sys import path
-path.append('/Users/ameyagharpure/DarsReportAnalyzer')
+path.append('/Users/alexander/Desktop/DarsReportAnalyzer')
 import dars_parser
 import dars_filter
 import minor_parser
@@ -7,8 +7,8 @@ from progress import check_C_type_group, check_H_type_group, get_unique_courses_
 import os
 
 
-UPLOAD_FOLDER = '/Users/ameyagharpure/DarsReportAnalyzer/site/static/pdf_upload'
-MINOR_DATA = '/Users/ameyagharpure/DarsReportAnalyzer/minor_data/minor_data.csv'
+UPLOAD_FOLDER = '/Users/alexander/Desktop/DarsReportAnalyzer/site/static/pdf_upload'
+MINOR_DATA = '/Users/alexander/Desktop/DarsReportAnalyzer/minor_data/minor_data.csv'
 
 # Struct to make data easier to visualize for Chart.js
 class minor_progress_struct():
@@ -27,17 +27,17 @@ class minor_progress_struct():
     def dump(self):
         return {'name' : self.name,
                 'group_names' : self.group_names,
-                'group_percentages' : self.group_percentages, 
+                'group_percentages' : self.group_percentages,
                 'groups_info' : self.groups_info}
 
 
 def analyze_dars():
     folder = os.listdir(UPLOAD_FOLDER)
-    
+
     # visualization should not run if no DARS report is uploaded
     if len(folder) == 0:
         return None, None
-    
+
     # get the first file
     name = folder[0]
 
@@ -68,7 +68,7 @@ def analyze_minors():
     df = minor_parser.create_pd(MINOR_DATA)
     # extract a list of all minors
     minors = minor_parser.create_minors(df)
-    
+
     # return list of all minors
     return minors
 
@@ -110,13 +110,13 @@ def get_graph_list(intersection=1):
             copy_courses = courses.copy()
             group_percentages.append(check_required_courses(minor, copy_courses)[1])
             group_names.append('Required Courses')
-            
+
             total = minor.get_courses() + minor.get_repl_courses_flattened()
             groups_info.append(total if len(total) <= 5 else total[:5])
 
-        progress = minor_progress_struct(name_=minor.name, 
-                                            group_names_=group_names, 
-                                                group_percentages_=group_percentages, 
+        progress = minor_progress_struct(name_=minor.name,
+                                            group_names_=group_names,
+                                                group_percentages_=group_percentages,
                                                     groups_info_=groups_info)
 
         graph_list.append(progress)

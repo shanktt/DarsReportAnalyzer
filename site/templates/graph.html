@@ -20,6 +20,10 @@
     {% endif %}
 </div>
 <canvas id="myChart" width="400" height="200"></canvas>
+
+
+
+
 <script>
     window.onload = function(){
 
@@ -89,6 +93,13 @@
         var currentItems = currentList.getElementsByTagName('li');
         for (var i = 0; i < currentItems.length; i++) {
             currentItems[i].style.color = colorlist[i];
+        }
+
+        var currentList = document.getElementsByClassName('legend')[0];
+        currentList.style.display = 'inline';
+        var currentItems = document.getElementsByClassName('legenditems')
+        for (var i = 0; i < currentItems.length; i++) {
+            currentItems[i].style.color = colorlist[0]
         }
 
         $('#minorSelect').change(function() {
