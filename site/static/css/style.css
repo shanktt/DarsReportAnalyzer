@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&family=Teko&family=Ubuntu&display=swap');
+html, body{
+    font-family: 'Poppins', sans-serif;
+}
+footer{
+    background-color: #3f3f3f;
+    padding-top: 2rem;
+}
+
+.ml-auto .dropdown-menu {
+    left: auto !important;
+    right: 0px;
+}
+
+.center{
+    text-align: center;
+}
+
+.navbar {
+    padding: .8rem;
+}
+
+.nav-item {
+    padding-right: 20px;
+}
+
+.nav-link{
+    font-size: 1.1em;
+}
+
+.jumbotron{
+    padding: 1rem;
+}
+
+.padding{
+    padding-bottom: 2rem;
+}
+
+.break{
+    border-top: 2px solid #b4b4b4;
+    margin-top: .3rem;
+    margin-bottom: 1rem;
+}
+
+.social h2{
+    font-size: 2.5em;
+    color: #9a9a9a;
+}
+
+.social-buttons{
+    padding-top: 1rem;
+}
+
+.social a{
+    font-size: 2em;
+    padding: 1rem;
+    color:#ffffff
+}
+
+.social a:hover,.social a:active,.social a:focus{
+    color:#337ab7
+}
+
+.xlabels{
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-outline-secondary{
+    background-color: #6648b1;
+    color: white;
+}
+
+.social-text{
+    color: white;
+}

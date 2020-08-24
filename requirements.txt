@@ -1,3 +1,4 @@
 pandas==1.0.3
 pdftotext==2.1.4
 dataclasses==0.7
+pytest==5.4.3
