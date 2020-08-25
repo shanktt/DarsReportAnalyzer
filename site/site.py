@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from sys import path
-path.append('/Users/alexander/Desktop/DarsReportAnalyzer')
+path.append('/Users/ameyagharpure/DarsReportAnalyzer/')
 from dars_parser import convert_pdf_text
 from driver import get_graph_list
 import os
@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 import time
 
 ALLOWED_EXTENSIONS = {'pdf'}
-UPLOAD_FOLDER = '/Users/alexander/Desktop/DarsReportAnalyzer/site/static/pdf_upload'
+UPLOAD_FOLDER = '/Users/ameyagharpure/DarsReportAnalyzer/site/static/pdf_upload'
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '7cb92ea70a44597ac5f029e5febc4aea'
