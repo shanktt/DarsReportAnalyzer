@@ -1,5 +1,5 @@
 from sys import path
-path.append('/Users/alexander/Desktop/DarsReportAnalyzer')
+path.append('/Users/ameyagharpure/DarsReportAnalyzer/dars_parser.py')
 import dars_parser
 import dars_filter
 import minor_parser
@@ -7,8 +7,8 @@ from progress import check_C_type_group, check_H_type_group, get_unique_courses_
 import os
 
 
-UPLOAD_FOLDER = '/Users/alexander/Desktop/DarsReportAnalyzer/site/static/pdf_upload'
-MINOR_DATA = '/Users/alexander/Desktop/DarsReportAnalyzer/minor_data/minor_data.csv'
+UPLOAD_FOLDER = '/Users/ameyagharpure/DarsReportAnalyzer/site/static/pdf_upload'
+MINOR_DATA = '/Users/ameyagharpure/DarsReportAnalyzer/minor_data/minor_data.csv'
 
 # Struct to make data easier to visualize for Chart.js
 class minor_progress_struct():
