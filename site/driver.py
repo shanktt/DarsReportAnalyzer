@@ -1,14 +1,11 @@
-from sys import path
-path.append('DarsReportAnalyzer/dars_parser.py')
 import dars_parser
 import dars_filter
 import minor_parser
 from progress import check_C_type_group, check_H_type_group, get_unique_courses_in_group, check_required_courses
 import os
 
-
-UPLOAD_FOLDER = 'DarsReportAnalyzer/site/static/pdf_upload'
-MINOR_DATA = 'DarsReportAnalyzer/minor_data/minor_data.csv'
+UPLOAD_FOLDER = 'site/tmp'
+MINOR_DATA = 'site/minor_data/minor_data.csv'
 
 # Struct to make data easier to visualize for Chart.js
 class minor_progress_struct():

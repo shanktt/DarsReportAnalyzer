@@ -97,9 +97,10 @@
 
         var currentList = document.getElementsByClassName('legend')[0];
         currentList.style.display = 'inline';
-        var currentItems = document.getElementsByClassName('legenditems')
+        
+        var currentItems = currentList.getElementsByTagName('li');
         for (var i = 0; i < currentItems.length; i++) {
-            currentItems[i].style.color = colorlist[0]
+            currentItems[i].style.color = colorlist[i]
         }
 
         $('#minorSelect').change(function() {
