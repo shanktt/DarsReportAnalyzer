@@ -4,8 +4,8 @@ import minor_parser
 from progress import check_C_type_group, check_H_type_group, get_unique_courses_in_group, check_required_courses
 import os
 
-UPLOAD_FOLDER = 'site/tmp'
-MINOR_DATA = 'site/minor_data/minor_data.csv'
+UPLOAD_FOLDER = 'tmp'
+MINOR_DATA = 'minor_data/minor_data.csv'
 
 # Struct to make data easier to visualize for Chart.js
 class minor_progress_struct():
