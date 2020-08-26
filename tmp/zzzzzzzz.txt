@@ -1,1 +1,1 @@
-content
+file is used to allow for pdfs to be uploaded to the tmp directory
