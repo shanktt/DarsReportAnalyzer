@@ -83,6 +83,10 @@ def visualization():
     if len(UPLOAD_FOLDER) == 0:
         return redirect(url_for('home'))
 
+    filelist = os.listdir(app.config['UPLOAD_FOLDER'])
+    if not check_file(str(filelist[0])):
+        return redirect(url_for('home'))
+
     graph_list = get_graph_list()
 
     if graph_list is None:
